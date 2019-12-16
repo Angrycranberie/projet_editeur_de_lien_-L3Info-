@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "entete.h"
 #include "elf.h"
-// Donne les informations sur le header d'un fichier elf passé en argument.
+// Donne les informations sur le header d'un fichier elf passï¿½ en argument.
 int main (int argc, char ** argv){
   if (argc!=2) {
     printf("Erreur: PrÃ©cisez un nom de fichier, et un seul\n");

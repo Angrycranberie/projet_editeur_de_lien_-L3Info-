@@ -166,12 +166,12 @@ Elf_identificator Lecture_identificateur (FILE* f){
 
 
 
-// Fonction de lecture dans le cas 32 bits, prends en compte le résultat de l'appel à Lecture_identificateur
+// Fonction de lecture dans le cas 32 bits, prends en compte le rï¿½sultat de l'appel ï¿½ Lecture_identificateur
 Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
   Elf32_Ehdr header;
   int i;
   
-  //Récupère ce qui à déja été lu et passé en argument
+  //Rï¿½cupï¿½re ce qui ï¿½ dï¿½ja ï¿½tï¿½ lu et passï¿½ en argument
   for (i=0;i<EI_NIDENT;i++){
     header.e_ident[i] = headid.e_ident[i];
   }
@@ -223,7 +223,7 @@ Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
   // Lit et VÃ©rifie quelle est le type de machine
   fread(&(header.e_machine), sizeof(Elf32_Half), 1, f);
 switch(header.e_machine)
-  // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc été réalisé directement à partir de elf.h, avec des replace.
+  // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc ï¿½tï¿½ rï¿½alisï¿½ directement ï¿½ partir de elf.h, avec des replace.
   {
     case 0:	
     printf("  Machine:                           No machine \n");
@@ -1019,12 +1019,12 @@ switch(header.e_machine)
 
 
 
-// Fonction de lecture dans le cas 64 bits, prends en compte le résultat de l'appel à Lecture_identificateur
+// Fonction de lecture dans le cas 64 bits, prends en compte le rï¿½sultat de l'appel ï¿½ Lecture_identificateur
 Elf64_Ehdr Lecture64(FILE* f, Elf_identificator headid){
   Elf64_Ehdr header;
   int i;
   
-  //Récupère ce qui à déja été lu et passé en argument
+  //Rï¿½cupï¿½re ce qui ï¿½ dï¿½ja ï¿½tï¿½ lu et passï¿½ en argument
   for (i=0;i<EI_NIDENT;i++){
     header.e_ident[i] = headid.e_ident[i];
   }
@@ -1076,7 +1076,7 @@ Elf64_Ehdr Lecture64(FILE* f, Elf_identificator headid){
   // Lit et VÃ©rifie quelle est le type de machine
   fread(&(header.e_machine), sizeof(Elf64_Half), 1, f);
 switch(header.e_machine)
-  // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc été réalisé directement à partir de elf.h, avec des replace.
+  // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc ï¿½tï¿½ rï¿½alisï¿½ directement ï¿½ partir de elf.h, avec des replace.
   {
     case 0:	
     printf("  Machine:                           No machine \n");
