@@ -7,7 +7,6 @@ int main (int argc, char ** argv){
     printf("Erreur: Précisez un nom de fichier, et un seul\n");
     return 1;
   }
-  printf("a\n");
   FILE * f;
   f = fopen(argv[1],"r");
   if (f==NULL){
@@ -19,7 +18,7 @@ int main (int argc, char ** argv){
   if (headid.e_ident[4] == ELFCLASS32){
     Lecture32(f,headid);
   }
-  else {
+  else if (headid.e_ident[4] == ELFCLASS64){
     Lecture64(f,headid);
   }
 }

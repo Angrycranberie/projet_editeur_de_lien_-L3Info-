@@ -15,42 +15,42 @@ Elf_identificator Lecture_identificateur (FILE* f){
   // VÃ©rifie les nombres magiques
   // retourne 1 si les "nombres magiques" ne correspondent pas Ã  ceux d'un fichier elf.
   if (header.e_ident[0]!=0x7f) {
-    printf("Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    printf("  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
     return header;
     }
   else if (header.e_ident[1]!='E') {
-    printf("Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    printf("  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
     return header;
     }
   else if (header.e_ident[2]!='L') {
-    printf("Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    printf("  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
     return header;
     }
   else if (header.e_ident[3]!='F') {
-    printf("Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    printf("  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
     return header;
     }
-  printf("Magic : ");
+  printf("  Magic:   ");
   for (i = 0; i < EI_NIDENT; i++) printf("%02x ",header.e_ident[i]);
-  printf("\n");
+  printf("  \n");
   
   // RÃ©cupÃ¨re la classe
   switch(header.e_ident[4])
   {
     case 0:
-    printf("Class: INVALIDE\n");
+    printf("  Class:                             INVALIDE\n");
     break;
     
     case 1:
-    printf("Class: ELF32\n");
+    printf("  Class:                             ELF32\n");
     break;
     
     case 2:
-    printf("Class: ELF64\n");
+    printf("  Class:                             ELF64\n");
     break;
     
     default:
-    printf("Class: INVALIDE\n");
+    printf("  Class:                             INVALIDE\n");
     break;
   }
   
@@ -58,19 +58,19 @@ Elf_identificator Lecture_identificateur (FILE* f){
   switch(header.e_ident[5])
   {
     case 0:
-    printf("Data: INVALIDE\n");
+    printf("  Data:                              INVALIDE\n");
     break;
     
     case 1:
-    printf("Data: 2's complement, little endian\n");
+    printf("  Data:                              2's complement, little endian\n");
     break;
     
     case 2:
-    printf("Data: 2's complement, big endian\n");
+    printf("  Data:                              2's complement, big endian\n");
     break;
     
     default:
-    printf("Data: INVALIDE\n");
+    printf("  Data:                              INVALIDE\n");
     break;
   }
   
@@ -78,11 +78,11 @@ Elf_identificator Lecture_identificateur (FILE* f){
   switch(header.e_ident[6])
   {
     case EV_CURRENT:
-    printf("Version: %d (current)\n",header.e_ident[6]);
+    printf("  Version:                           %d (current)\n",header.e_ident[6]);
     break;
     
     default:
-    printf("Version: INVALIDE\n");
+    printf("  Version:                           INVALIDE\n");
     break;
   }
   
@@ -92,69 +92,69 @@ Elf_identificator Lecture_identificateur (FILE* f){
   switch(header.e_ident[7])
   {
     case ELFOSABI_NONE:
-    printf("OS/ABI:  UNIX System V \n");
+    printf("  OS/ABI:                            UNIX System V \n");
     break;
 
     case ELFOSABI_HPUX:
-    printf("OS/ABI:  HP-UX \n");
+    printf("  OS/ABI:                            HP-UX \n");
     break;
 
     case ELFOSABI_NETBSD:
-    printf("OS/ABI:  NetBSD.  \n");
+    printf("  OS/ABI:                            NetBSD.  \n");
     break;
 
     case ELFOSABI_GNU:
-    printf("OS/ABI:  GNU ELF extensions.  \n");
+    printf("  OS/ABI:                            GNU ELF extensions.  \n");
     break;
 
     case ELFOSABI_SOLARIS:
-    printf("OS/ABI:  Sun Solaris.  \n");
+    printf("  OS/ABI:                            Sun Solaris.  \n");
     break;
 
     case ELFOSABI_AIX:
-    printf("OS/ABI:  IBM AIX.  \n");
+    printf("  OS/ABI:                            IBM AIX.  \n");
     break;
 
     case ELFOSABI_IRIX:
-    printf("OS/ABI:  SGI Irix.  \n");
+    printf("  OS/ABI:                            SGI Irix.  \n");
     break;
 
     case ELFOSABI_FREEBSD:
-    printf("OS/ABI:  FreeBSD.  \n");
+    printf("  OS/ABI:                            FreeBSD.  \n");
     break;
 
     case ELFOSABI_TRU64:
-    printf("OS/ABI:  Compaq TRU64 UNIX.  \n");
+    printf("  OS/ABI:                            Compaq TRU64 UNIX.  \n");
     break;
 
     case ELFOSABI_MODESTO:
-    printf("OS/ABI:  Novell Modesto.  \n");
+    printf("  OS/ABI:                            Novell Modesto.  \n");
     break;
 
     case ELFOSABI_OPENBSD:
-    printf("OS/ABI:  OpenBSD.  \n");
+    printf("  OS/ABI:                            OpenBSD.  \n");
     break;
 
     case ELFOSABI_ARM_AEABI:
-    printf("OS/ABI:  ARM EABI \n");
+    printf("  OS/ABI:                            ARM EABI \n");
     break;
 
     case ELFOSABI_ARM:
-    printf("OS/ABI:  ARM \n");
+    printf("  OS/ABI:                            ARM \n");
     break;
 
     case ELFOSABI_STANDALONE:
-    printf("OS/ABI:  Standalone (embedded) application \n");
+    printf("  OS/ABI:                            Standalone (embedded) application \n");
     break;
 
     
     default:
-    printf("OS/ABI: Code Inconnu\n");
+    printf("  OS/ABI:                            Code Inconnu\n");
     break;
   }
   
   // Verifie la version de l'ABI
-  printf("ABI Version: %d\n",header.e_ident[8]);
+  printf("  ABI Version:                       %d\n",header.e_ident[8]);
   
   return header;
   
@@ -163,6 +163,8 @@ Elf_identificator Lecture_identificateur (FILE* f){
 
 
 }
+
+
 
 // Fonction de lecture dans le cas 32 bits, prends en compte le résultat de l'appel à Lecture_identificateur
 Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
@@ -179,843 +181,833 @@ Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
   switch(header.e_type)
   {
     case 0:
-    printf("Type: NONE (No file type)\n");
+    printf("  Type:                              NONE (No file type)\n");
     break;
     
 
     case 1:
-    printf("Type: REL (Relocatable file )\n");
+    printf("  Type:                              REL (Relocatable file )\n");
     break;
 
 
     case 2:
-    printf("Type: EXEC (Executable file )\n");
+    printf("  Type:                              EXEC (Executable file )\n");
     break;
 
     
     case 3:
-    printf("Type: DYN (Shared object file )\n");
+    printf("  Type:                              DYN (Shared object file )\n");
     break;
 
     
     case 4:
-    printf("Type: CORE (Core file )\n");
-    break;
-
-    /* Cette partie n'est pas importante
-    case 0xfe00:
-    printf("Type: LOPROC (OS-specific range start )\n");
-    break;
-
-    
-    case 0xfeff:
-    printf("Type: LOOS (OS-specific range end )\n");
+    printf("  Type:                              CORE (Core file )\n");
     break;
 
     
     case 0xff00:
-    printf("Type: HIOS (Processor-specific range start )\n");
+    printf("  Type:                              LOPROC (Processor-specific )\n");
     break;
 
     
     case 0xffff:
-    printf("Type: HIPROC (Processor-specific range end )\n");
+    printf("  Type:                              HIPROC (Processor-specific )\n");
     break;
-    */
+
 
     default:
-    printf("Type: Inconnu\n");
+    printf("  Type:                              Inconnu\n");
     break;
   }
   
   // Lit et VÃ©rifie quelle est le type de machine
   fread(&(header.e_machine), sizeof(Elf32_Half), 1, f);
-  switch(header.e_machine)
+switch(header.e_machine)
   // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc été réalisé directement à partir de elf.h, avec des replace.
   {
     case 0:	
-    printf("Machine: No machine \n");
+    printf("  Machine:                           No machine \n");
     break;
 
     case 1:	
-    printf("Machine: AT&T WE 32100 \n");
+    printf("  Machine:                           AT&T WE 32100 \n");
     break;
 
     case 2:	
-    printf("Machine: SUN SPARC \n");
+    printf("  Machine:                           SUN SPARC \n");
     break;
 
     case 3:	
-    printf("Machine: Intel 80386 \n");
+    printf("  Machine:                           Intel 80386 \n");
     break;
 
     case 4:	
-    printf("Machine: Motorola m68k family \n");
+    printf("  Machine:                           Motorola m68k family \n");
     break;
 
     case 5:	
-    printf("Machine: Motorola m88k family \n");
+    printf("  Machine:                           Motorola m88k family \n");
     break;
 
     case 6:	
-    printf("Machine: Intel MCU \n");
+    printf("  Machine:                           Intel MCU \n");
     break;
 
     case 7:	
-    printf("Machine: Intel 80860 \n");
+    printf("  Machine:                           Intel 80860 \n");
     break;
 
     case 8:	
-    printf("Machine: MIPS R3000 big-endian \n");
+    printf("  Machine:                           MIPS R3000 big-endian \n");
     break;
 
     case 9:	
-    printf("Machine: IBM System/370 \n");
+    printf("  Machine:                           IBM System/370 \n");
     break;
 
     case 10:	
-    printf("Machine: MIPS R3000 little-endian \n");
+    printf("  Machine:                           MIPS R3000 little-endian \n");
     break;
 
             
-    printf("Machine: reserved 11-14 \n");
+    printf("  Machine:                           reserved 11-14 \n");
     break;
 
     case 15:	
-    printf("Machine: HPPA \n");
+    printf("  Machine:                           HPPA \n");
     break;
 
             
-    printf("Machine: reserved 16 \n");
+    printf("  Machine:                           reserved 16 \n");
     break;
 
     case 17:	
-    printf("Machine: Fujitsu VPP500 \n");
+    printf("  Machine:                           Fujitsu VPP500 \n");
     break;
 
     case 18:	
-    printf("Machine: Sun's v8plus \n");
+    printf("  Machine:                           Sun's v8plus \n");
     break;
 
     case 19:	
-    printf("Machine: Intel 80960 \n");
+    printf("  Machine:                           Intel 80960 \n");
     break;
 
     case 20:	
-    printf("Machine: PowerPC \n");
+    printf("  Machine:                           PowerPC \n");
     break;
 
     case 21:	
-    printf("Machine: PowerPC 64-bit \n");
+    printf("  Machine:                           PowerPC 64-bit \n");
     break;
 
     case 22:	
-    printf("Machine: IBM S390 \n");
+    printf("  Machine:                           IBM S390 \n");
     break;
 
     case 23:	
-    printf("Machine: IBM SPU/SPC \n");
+    printf("  Machine:                           IBM SPU/SPC \n");
     break;
 
             
-    printf("Machine: reserved 24-35 \n");
+    printf("  Machine:                           reserved 24-35 \n");
     break;
 
     case 36:	
-    printf("Machine: NEC V800 series \n");
+    printf("  Machine:                           NEC V800 series \n");
     break;
 
     case 37:	
-    printf("Machine: Fujitsu FR20 \n");
+    printf("  Machine:                           Fujitsu FR20 \n");
     break;
 
     case 38:	
-    printf("Machine: TRW RH-32 \n");
+    printf("  Machine:                           TRW RH-32 \n");
     break;
 
     case 39:	
-    printf("Machine: Motorola RCE \n");
+    printf("  Machine:                           Motorola RCE \n");
     break;
 
     case 40:	
-    printf("Machine: ARM \n");
+    printf("  Machine:                           ARM \n");
     break;
 
     case 41:	
-    printf("Machine: Digital Alpha \n");
+    printf("  Machine:                           Digital Alpha \n");
     break;
 
     case 42:	
-    printf("Machine: Hitachi SH \n");
+    printf("  Machine:                           Hitachi SH \n");
     break;
 
     case 43:	
-    printf("Machine: SPARC v9 64-bit \n");
+    printf("  Machine:                           SPARC v9 64-bit \n");
     break;
 
     case 44:	
-    printf("Machine: Siemens Tricore \n");
+    printf("  Machine:                           Siemens Tricore \n");
     break;
 
     case 45:	
-    printf("Machine: Argonaut RISC Core \n");
+    printf("  Machine:                           Argonaut RISC Core \n");
     break;
 
     case 46:	
-    printf("Machine: Hitachi H8/300 \n");
+    printf("  Machine:                           Hitachi H8/300 \n");
     break;
 
     case 47:	
-    printf("Machine: Hitachi H8/300H \n");
+    printf("  Machine:                           Hitachi H8/300H \n");
     break;
 
     case 48:	
-    printf("Machine: Hitachi H8S \n");
+    printf("  Machine:                           Hitachi H8S \n");
     break;
 
     case 49:	
-    printf("Machine: Hitachi H8/500 \n");
+    printf("  Machine:                           Hitachi H8/500 \n");
     break;
 
     case 50:	
-    printf("Machine: Intel Merced \n");
+    printf("  Machine:                           Intel Merced \n");
     break;
 
     case 51:	
-    printf("Machine: Stanford MIPS-X \n");
+    printf("  Machine:                           Stanford MIPS-X \n");
     break;
 
     case 52:	
-    printf("Machine: Motorola Coldfire \n");
+    printf("  Machine:                           Motorola Coldfire \n");
     break;
 
     case 53:	
-    printf("Machine: Motorola M68HC12 \n");
+    printf("  Machine:                           Motorola M68HC12 \n");
     break;
 
     case 54:	
-    printf("Machine: Fujitsu MMA Multimedia Accelerator \n");
+    printf("  Machine:                           Fujitsu MMA Multimedia Accelerator \n");
     break;
 
     case 55:	
-    printf("Machine: Siemens PCP \n");
+    printf("  Machine:                           Siemens PCP \n");
     break;
 
     case 56:	
-    printf("Machine: Sony nCPU embeeded RISC \n");
+    printf("  Machine:                           Sony nCPU embeeded RISC \n");
     break;
 
     case 57:	
-    printf("Machine: Denso NDR1 microprocessor \n");
+    printf("  Machine:                           Denso NDR1 microprocessor \n");
     break;
 
     case 58:	
-    printf("Machine: Motorola Start*Core processor \n");
+    printf("  Machine:                           Motorola Start*Core processor \n");
     break;
 
     case 59:	
-    printf("Machine: Toyota ME16 processor \n");
+    printf("  Machine:                           Toyota ME16 processor \n");
     break;
 
     case 60:	
-    printf("Machine: STMicroelectronic ST100 processor \n");
+    printf("  Machine:                           STMicroelectronic ST100 processor \n");
     break;
 
     case 61:	
-    printf("Machine: Advanced Logic Corp. Tinyj emb.fam \n");
+    printf("  Machine:                           Advanced Logic Corp. Tinyj emb.fam \n");
     break;
 
     case 62:	
-    printf("Machine: AMD x86-64 architecture \n");
+    printf("  Machine:                           AMD x86-64 architecture \n");
     break;
 
     case 63:	
-    printf("Machine: Sony DSP Processor \n");
+    printf("  Machine:                           Sony DSP Processor \n");
     break;
 
     case 64:	
-    printf("Machine: Digital PDP-10 \n");
+    printf("  Machine:                           Digital PDP-10 \n");
     break;
 
     case 65:	
-    printf("Machine: Digital PDP-11 \n");
+    printf("  Machine:                           Digital PDP-11 \n");
     break;
 
     case 66:	
-    printf("Machine: Siemens FX66 microcontroller \n");
+    printf("  Machine:                           Siemens FX66 microcontroller \n");
     break;
 
     case 67:	
-    printf("Machine: STMicroelectronics ST9+ 8/16 mc \n");
+    printf("  Machine:                           STMicroelectronics ST9+ 8/16 mc \n");
     break;
 
     case 68:	
-    printf("Machine: STmicroelectronics ST7 8 bit mc \n");
+    printf("  Machine:                           STmicroelectronics ST7 8 bit mc \n");
     break;
 
     case 69:	
-    printf("Machine: Motorola MC68HC16 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC16 microcontroller \n");
     break;
 
     case 70:	
-    printf("Machine: Motorola MC68HC11 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC11 microcontroller \n");
     break;
 
     case 71:	
-    printf("Machine: Motorola MC68HC08 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC08 microcontroller \n");
     break;
 
     case 72:	
-    printf("Machine: Motorola MC68HC05 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC05 microcontroller \n");
     break;
 
     case 73:	
-    printf("Machine: Silicon Graphics SVx \n");
+    printf("  Machine:                           Silicon Graphics SVx \n");
     break;
 
     case 74:	
-    printf("Machine: STMicroelectronics ST19 8 bit mc \n");
+    printf("  Machine:                           STMicroelectronics ST19 8 bit mc \n");
     break;
 
     case 75:	
-    printf("Machine: Digital VAX \n");
+    printf("  Machine:                           Digital VAX \n");
     break;
 
     case 76:	
-    printf("Machine: Axis Communications 32-bit emb.proc \n");
+    printf("  Machine:                           Axis Communications 32-bit emb.proc \n");
     break;
 
     case 77:	
-    printf("Machine: Infineon Technologies 32-bit emb.proc \n");
+    printf("  Machine:                           Infineon Technologies 32-bit emb.proc \n");
     break;
 
     case 78:	
-    printf("Machine: Element 14 64-bit DSP Processor \n");
+    printf("  Machine:                           Element 14 64-bit DSP Processor \n");
     break;
 
     case 79:	
-    printf("Machine: LSI Logic 16-bit DSP Processor \n");
+    printf("  Machine:                           LSI Logic 16-bit DSP Processor \n");
     break;
 
     case 80:	
-    printf("Machine: Donald Knuth's educational 64-bit proc \n");
+    printf("  Machine:                           Donald Knuth's educational 64-bit proc \n");
     break;
 
     case 81:	
-    printf("Machine: Harvard University machine-independent object files \n");
+    printf("  Machine:                           Harvard University machine-independent object files \n");
     break;
 
     case 82:	
-    printf("Machine: SiTera Prism \n");
+    printf("  Machine:                           SiTera Prism \n");
     break;
 
     case 83:	
-    printf("Machine: Atmel AVR 8-bit microcontroller \n");
+    printf("  Machine:                           Atmel AVR 8-bit microcontroller \n");
     break;
 
     case 84:	
-    printf("Machine: Fujitsu FR30 \n");
+    printf("  Machine:                           Fujitsu FR30 \n");
     break;
 
     case 85:	
-    printf("Machine: Mitsubishi D10V \n");
+    printf("  Machine:                           Mitsubishi D10V \n");
     break;
 
     case 86:	
-    printf("Machine: Mitsubishi D30V \n");
+    printf("  Machine:                           Mitsubishi D30V \n");
     break;
 
     case 87:	
-    printf("Machine: NEC v850 \n");
+    printf("  Machine:                           NEC v850 \n");
     break;
 
     case 88:	
-    printf("Machine: Mitsubishi M32R \n");
+    printf("  Machine:                           Mitsubishi M32R \n");
     break;
 
     case 89:	
-    printf("Machine: Matsushita MN10300 \n");
+    printf("  Machine:                           Matsushita MN10300 \n");
     break;
 
     case 90:	
-    printf("Machine: Matsushita MN10200 \n");
+    printf("  Machine:                           Matsushita MN10200 \n");
     break;
 
     case 91:	
-    printf("Machine: picoJava \n");
+    printf("  Machine:                           picoJava \n");
     break;
 
     case 92:	
-    printf("Machine: OpenRISC 32-bit embedded processor \n");
+    printf("  Machine:                           OpenRISC 32-bit embedded processor \n");
     break;
 
     case 93:	
-    printf("Machine: ARC International ARCompact \n");
+    printf("  Machine:                           ARC International ARCompact \n");
     break;
 
     case 94:	
-    printf("Machine: Tensilica Xtensa Architecture \n");
+    printf("  Machine:                           Tensilica Xtensa Architecture \n");
     break;
 
     case 95:	
-    printf("Machine: Alphamosaic VideoCore \n");
+    printf("  Machine:                           Alphamosaic VideoCore \n");
     break;
 
     case 96:	
-    printf("Machine: Thompson Multimedia General Purpose Proc \n");
+    printf("  Machine:                           Thompson Multimedia General Purpose Proc \n");
     break;
 
     case 97:	
-    printf("Machine: National Semi. 32000 \n");
+    printf("  Machine:                           National Semi. 32000 \n");
     break;
 
     case 98:	
-    printf("Machine: Tenor Network TPC \n");
+    printf("  Machine:                           Tenor Network TPC \n");
     break;
 
     case 99:	
-    printf("Machine: Trebia SNP 1000 \n");
+    printf("  Machine:                           Trebia SNP 1000 \n");
     break;
 
     case 100:	
-    printf("Machine: STMicroelectronics ST200 \n");
+    printf("  Machine:                           STMicroelectronics ST200 \n");
     break;
 
     case 101:	
-    printf("Machine: Ubicom IP2xxx \n");
+    printf("  Machine:                           Ubicom IP2xxx \n");
     break;
 
     case 102:	
-    printf("Machine: MAX processor \n");
+    printf("  Machine:                           MAX processor \n");
     break;
 
     case 103:	
-    printf("Machine: National Semi. CompactRISC \n");
+    printf("  Machine:                           National Semi. CompactRISC \n");
     break;
 
     case 104:	
-    printf("Machine: Fujitsu F2MC16 \n");
+    printf("  Machine:                           Fujitsu F2MC16 \n");
     break;
 
     case 105:	
-    printf("Machine: Texas Instruments msp430 \n");
+    printf("  Machine:                           Texas Instruments msp430 \n");
     break;
 
     case 106:	
-    printf("Machine: Analog Devices Blackfin DSP \n");
+    printf("  Machine:                           Analog Devices Blackfin DSP \n");
     break;
 
     case 107:	
-    printf("Machine: Seiko Epson S1C33 family \n");
+    printf("  Machine:                           Seiko Epson S1C33 family \n");
     break;
 
     case 108:	
-    printf("Machine: Sharp embedded microprocessor \n");
+    printf("  Machine:                           Sharp embedded microprocessor \n");
     break;
 
     case 109:	
-    printf("Machine: Arca RISC \n");
+    printf("  Machine:                           Arca RISC \n");
     break;
 
     case 110:	
-    printf("Machine: PKU-Unity & MPRC Peking Uni. mc series \n");
+    printf("  Machine:                           PKU-Unity & MPRC Peking Uni. mc series \n");
     break;
 
     case 111:	
-    printf("Machine: eXcess configurable cpu \n");
+    printf("  Machine:                           eXcess configurable cpu \n");
     break;
 
     case 112:	
-    printf("Machine: Icera Semi. Deep Execution Processor \n");
+    printf("  Machine:                           Icera Semi. Deep Execution Processor \n");
     break;
 
     case 113:	
-    printf("Machine: Altera Nios II \n");
+    printf("  Machine:                           Altera Nios II \n");
     break;
 
     case 114:	
-    printf("Machine: National Semi. CompactRISC CRX \n");
+    printf("  Machine:                           National Semi. CompactRISC CRX \n");
     break;
 
     case 115:	
-    printf("Machine: Motorola XGATE \n");
+    printf("  Machine:                           Motorola XGATE \n");
     break;
 
     case 116:	
-    printf("Machine: Infineon C16x/XC16x \n");
+    printf("  Machine:                           Infineon C16x/XC16x \n");
     break;
 
     case 117:	
-    printf("Machine: Renesas M16C \n");
+    printf("  Machine:                           Renesas M16C \n");
     break;
 
     case 118:	
-    printf("Machine: Microchip Technology dsPIC30F \n");
+    printf("  Machine:                           Microchip Technology dsPIC30F \n");
     break;
 
     case 119:	
-    printf("Machine: Freescale Communication Engine RISC \n");
+    printf("  Machine:                           Freescale Communication Engine RISC \n");
     break;
 
     case 120:	
-    printf("Machine: Renesas M32C \n");
+    printf("  Machine:                           Renesas M32C \n");
     break;
 
     case 131:	
-    printf("Machine: Altium TSK3000 \n");
+    printf("  Machine:                           Altium TSK3000 \n");
     break;
 
     case 132:	
-    printf("Machine: Freescale RS08 \n");
+    printf("  Machine:                           Freescale RS08 \n");
     break;
 
     case 133:	
-    printf("Machine: Analog Devices SHARC family \n");
+    printf("  Machine:                           Analog Devices SHARC family \n");
     break;
 
     case 134:	
-    printf("Machine: Cyan Technology eCOG2 \n");
+    printf("  Machine:                           Cyan Technology eCOG2 \n");
     break;
 
     case 135:	
-    printf("Machine: Sunplus S+core7 RISC \n");
+    printf("  Machine:                           Sunplus S+core7 RISC \n");
     break;
 
     case 136:	
-    printf("Machine: New Japan Radio (NJR) 24-bit DSP \n");
+    printf("  Machine:                           New Japan Radio (NJR) 24-bit DSP \n");
     break;
 
     case 137:	
-    printf("Machine: Broadcom VideoCore III \n");
+    printf("  Machine:                           Broadcom VideoCore III \n");
     break;
 
     case 138:	
-    printf("Machine: RISC for Lattice FPGA \n");
+    printf("  Machine:                           RISC for Lattice FPGA \n");
     break;
 
     case 139:	
-    printf("Machine: Seiko Epson C17 \n");
+    printf("  Machine:                           Seiko Epson C17 \n");
     break;
 
     case 140:	
-    printf("Machine: Texas Instruments TMS320C6000 DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C6000 DSP \n");
     break;
 
     case 141:	
-    printf("Machine: Texas Instruments TMS320C2000 DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C2000 DSP \n");
     break;
 
     case 142:	
-    printf("Machine: Texas Instruments TMS320C55x DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C55x DSP \n");
     break;
 
     case 143:	
-    printf("Machine: Texas Instruments App. Specific RISC \n");
+    printf("  Machine:                           Texas Instruments App. Specific RISC \n");
     break;
 
     case 144:	
-    printf("Machine: Texas Instruments Prog. Realtime Unit \n");
+    printf("  Machine:                           Texas Instruments Prog. Realtime Unit \n");
     break;
 
     case 160:	
-    printf("Machine: STMicroelectronics 64bit VLIW DSP \n");
+    printf("  Machine:                           STMicroelectronics 64bit VLIW DSP \n");
     break;
 
     case 161:	
-    printf("Machine: Cypress M8C \n");
+    printf("  Machine:                           Cypress M8C \n");
     break;
 
     case 162:	
-    printf("Machine: Renesas R32C \n");
+    printf("  Machine:                           Renesas R32C \n");
     break;
 
     case 163:	
-    printf("Machine: NXP Semi. TriMedia \n");
+    printf("  Machine:                           NXP Semi. TriMedia \n");
     break;
 
     case 164:	
-    printf("Machine: QUALCOMM DSP6 \n");
+    printf("  Machine:                           QUALCOMM DSP6 \n");
     break;
 
     case 165:	
-    printf("Machine: Intel 8051 and variants \n");
+    printf("  Machine:                           Intel 8051 and variants \n");
     break;
 
     case 166:	
-    printf("Machine: STMicroelectronics STxP7x \n");
+    printf("  Machine:                           STMicroelectronics STxP7x \n");
     break;
 
     case 167:	
-    printf("Machine: Andes Tech. compact code emb. RISC \n");
+    printf("  Machine:                           Andes Tech. compact code emb. RISC \n");
     break;
 
     case 168:	
-    printf("Machine: Cyan Technology eCOG1X \n");
+    printf("  Machine:                           Cyan Technology eCOG1X \n");
     break;
 
     case 169:	
-    printf("Machine: Dallas Semi. MAXQ30 mc \n");
+    printf("  Machine:                           Dallas Semi. MAXQ30 mc \n");
     break;
 
     case 170:	
-    printf("Machine: New Japan Radio (NJR) 16-bit DSP \n");
+    printf("  Machine:                           New Japan Radio (NJR) 16-bit DSP \n");
     break;
 
     case 171:	
-    printf("Machine: M2000 Reconfigurable RISC \n");
+    printf("  Machine:                           M2000 Reconfigurable RISC \n");
     break;
 
     case 172:	
-    printf("Machine: Cray NV2 vector architecture \n");
+    printf("  Machine:                           Cray NV2 vector architecture \n");
     break;
 
     case 173:	
-    printf("Machine: Renesas RX \n");
+    printf("  Machine:                           Renesas RX \n");
     break;
 
     case 174:	
-    printf("Machine: Imagination Tech. META \n");
+    printf("  Machine:                           Imagination Tech. META \n");
     break;
 
     case 175:	
-    printf("Machine: MCST Elbrus \n");
+    printf("  Machine:                           MCST Elbrus \n");
     break;
 
     case 176:	
-    printf("Machine: Cyan Technology eCOG16 \n");
+    printf("  Machine:                           Cyan Technology eCOG16 \n");
     break;
 
     case 177:	
-    printf("Machine: National Semi. CompactRISC CR16 \n");
+    printf("  Machine:                           National Semi. CompactRISC CR16 \n");
     break;
 
     case 178:	
-    printf("Machine: Freescale Extended Time Processing Unit \n");
+    printf("  Machine:                           Freescale Extended Time Processing Unit \n");
     break;
 
     case 179:	
-    printf("Machine: Infineon Tech. SLE9X \n");
+    printf("  Machine:                           Infineon Tech. SLE9X \n");
     break;
 
     case 180:	
-    printf("Machine: Intel L10M \n");
+    printf("  Machine:                           Intel L10M \n");
     break;
 
     case 181:	
-    printf("Machine: Intel K10M \n");
+    printf("  Machine:                           Intel K10M \n");
     break;
 
     case 183:	
-    printf("Machine: ARM AARCH64 \n");
+    printf("  Machine:                           ARM AARCH64 \n");
     break;
 
     case 185:	
-    printf("Machine: Amtel 32-bit microprocessor \n");
+    printf("  Machine:                           Amtel 32-bit microprocessor \n");
     break;
 
     case 186:	
-    printf("Machine: STMicroelectronics STM8 \n");
+    printf("  Machine:                           STMicroelectronics STM8 \n");
     break;
 
     case 187:	
-    printf("Machine: Tileta TILE64 \n");
+    printf("  Machine:                           Tileta TILE64 \n");
     break;
 
     case 188:	
-    printf("Machine: Tilera TILEPro \n");
+    printf("  Machine:                           Tilera TILEPro \n");
     break;
 
     case 189:	
-    printf("Machine: Xilinx MicroBlaze \n");
+    printf("  Machine:                           Xilinx MicroBlaze \n");
     break;
 
     case 190:	
-    printf("Machine: NVIDIA CUDA \n");
+    printf("  Machine:                           NVIDIA CUDA \n");
     break;
 
     case 191:	
-    printf("Machine: Tilera TILE-Gx \n");
+    printf("  Machine:                           Tilera TILE-Gx \n");
     break;
 
     case 192:	
-    printf("Machine: CloudShield \n");
+    printf("  Machine:                           CloudShield \n");
     break;
 
     case 193:	
-    printf("Machine: KIPO-KAIST Core-A 1st gen. \n");
+    printf("  Machine:                           KIPO-KAIST Core-A 1st gen. \n");
     break;
 
     case 194:	
-    printf("Machine: KIPO-KAIST Core-A 2nd gen. \n");
+    printf("  Machine:                           KIPO-KAIST Core-A 2nd gen. \n");
     break;
 
     case 195:	
-    printf("Machine: Synopsys ARCompact V2 \n");
+    printf("  Machine:                           Synopsys ARCompact V2 \n");
     break;
 
     case 196:	
-    printf("Machine: Open8 RISC \n");
+    printf("  Machine:                           Open8 RISC \n");
     break;
 
     case 197:	
-    printf("Machine: Renesas RL78 \n");
+    printf("  Machine:                           Renesas RL78 \n");
     break;
 
     case 198:	
-    printf("Machine: Broadcom VideoCore V \n");
+    printf("  Machine:                           Broadcom VideoCore V \n");
     break;
 
     case 199:	
-    printf("Machine: Renesas 78KOR \n");
+    printf("  Machine:                           Renesas 78KOR \n");
     break;
 
     case 200:	
-    printf("Machine: Freescale 56800EX DSC \n");
+    printf("  Machine:                           Freescale 56800EX DSC \n");
     break;
 
     case 201:	
-    printf("Machine: Beyond BA1 \n");
+    printf("  Machine:                           Beyond BA1 \n");
     break;
 
     case 202:	
-    printf("Machine: Beyond BA2 \n");
+    printf("  Machine:                           Beyond BA2 \n");
     break;
 
     case 203:	
-    printf("Machine: XMOS xCORE \n");
+    printf("  Machine:                           XMOS xCORE \n");
     break;
 
     case 204:	
-    printf("Machine: Microchip 8-bit PIC(r) \n");
+    printf("  Machine:                           Microchip 8-bit PIC(r) \n");
     break;
 
     case 210:	
-    printf("Machine: KM211 KM32 \n");
+    printf("  Machine:                           KM211 KM32 \n");
     break;
 
     case 211:	
-    printf("Machine: KM211 KMX32 \n");
+    printf("  Machine:                           KM211 KMX32 \n");
     break;
 
     case 212:	
-    printf("Machine: KM211 KMX16 \n");
+    printf("  Machine:                           KM211 KMX16 \n");
     break;
 
     case 213:	
-    printf("Machine: KM211 KMX8 \n");
+    printf("  Machine:                           KM211 KMX8 \n");
     break;
 
     case 214:	
-    printf("Machine: KM211 KVARC \n");
+    printf("  Machine:                           KM211 KVARC \n");
     break;
 
     case 215:	
-    printf("Machine: Paneve CDP \n");
+    printf("  Machine:                           Paneve CDP \n");
     break;
 
     case 216:	
-    printf("Machine: Cognitive Smart Memory Processor \n");
+    printf("  Machine:                           Cognitive Smart Memory Processor \n");
     break;
 
     case 217:	
-    printf("Machine: Bluechip CoolEngine \n");
+    printf("  Machine:                           Bluechip CoolEngine \n");
     break;
 
     case 218:	
-    printf("Machine: Nanoradio Optimized RISC \n");
+    printf("  Machine:                           Nanoradio Optimized RISC \n");
     break;
 
     case 219:	
-    printf("Machine: CSR Kalimba \n");
+    printf("  Machine:                           CSR Kalimba \n");
     break;
 
     case 220:	
-    printf("Machine: Zilog Z80 \n");
+    printf("  Machine:                           Zilog Z80 \n");
     break;
 
     case 221:	
-    printf("Machine: Controls and Data Services VISIUMcore \n");
+    printf("  Machine:                           Controls and Data Services VISIUMcore \n");
     break;
 
     case 222:	
-    printf("Machine: FTDI Chip FT32 \n");
+    printf("  Machine:                           FTDI Chip FT32 \n");
     break;
 
     case 223:	
-    printf("Machine: Moxie processor \n");
+    printf("  Machine:                           Moxie processor \n");
     break;
 
     case 224:	
-    printf("Machine: AMD GPU \n");
+    printf("  Machine:                           AMD GPU \n");
     break;
 
     case 243:	
-    printf("Machine: RISC-V \n");
+    printf("  Machine:                           RISC-V \n");
     break;
 
     case 247:	
-    printf("Machine: Linux BPF -- in-kernel virtual machine \n");
+    printf("  Machine:                           Linux BPF -- in-kernel virtual machine \n");
     break;
 
     default:
-    printf("Type: Inconnu\n");
+    printf("  Machine:                           Inconnue\n");
     break;
   }
-
+  
   // Lit et affiche la version du fichier
   fread(&(header.e_version), sizeof(Elf32_Word), 1, f);
-  printf("Version: 0x%x\n",header.e_version);
+  printf("  Version:                           0x%x\n",header.e_version);
   
   // Lit et affiche l'addresse de dÃ©part
   fread(&(header.e_entry), sizeof(Elf32_Addr), 1, f);
-  printf("Entry point address: 0x%x\n",header.e_entry);
+  printf("  Entry point address:               0x%x\n",header.e_entry);
   
   // Lit et affiche l'offset permettant d'arriver sur les headers du programme
   fread(&(header.e_phoff), sizeof(Elf32_Off), 1, f);
-  printf("Start of program headers: %d (bytes into file)\n",header.e_phoff);
+  printf("  Start of program headers:          %d (bytes into file)\n",header.e_phoff);
   
   
   // Lit et affiche l'offset permettant d'arriver sur les headers des sections
   fread(&(header.e_shoff), sizeof(Elf32_Off), 1, f);
-  printf("Start of section headers: %d (bytes into file)\n",header.e_shoff);
+  printf("  Start of section headers:          %d (bytes into file)\n",header.e_shoff);
   
   // Lit et affiche les flags, n'affiche que la valeur en hexadecimal, comme readelf.
   fread(&(header.e_flags), sizeof(Elf32_Word), 1, f);
-  printf("Flags: 0x%x \n",header.e_flags);
+  printf("  Flags:                             0x%x \n",header.e_flags);
   
   // Lit et affiche la taille du header ( celui en cours de lecture)
   fread(&(header.e_ehsize), sizeof(Elf32_Half), 1, f);
-  printf("Size of this header: %d (bytes) \n",header.e_ehsize);
+  printf("  Size of this header:               %d (bytes) \n",header.e_ehsize);
   
   
   // Lit et affiche la taille des headers du programme
   fread(&(header.e_phentsize), sizeof(Elf32_Half), 1, f);
-  printf("Size of program headers: %d (bytes) \n",header.e_phentsize);
+  printf("  Size of program headers:           %d (bytes) \n",header.e_phentsize);
   
   
   // Lit et affiche le nombre de headers du programme
   fread(&(header.e_phnum), sizeof(Elf32_Half), 1, f);
-  printf("Number of program headers: %d (bytes) \n",header.e_phnum);
+  printf("  Number of program headers:         %d \n",header.e_phnum);
   
   
   
   // Lit et affiche la taille des headers de section
   fread(&(header.e_shentsize), sizeof(Elf32_Half), 1, f);
-  printf("Size of section headers: %d (bytes) \n",header.e_shentsize);
+  printf("  Size of section headers:           %d (bytes) \n",header.e_shentsize);
   
   
   
   // Lit et affiche le nombre de headers de section
   fread(&(header.e_shnum), sizeof(Elf32_Half), 1, f);
-  printf("Number of section headers: %d (bytes) \n",header.e_shnum);
+  printf("  Number of section headers:         %d \n",header.e_shnum);
   
   
   
   // Lit et affiche e_shstrndx
   fread(&(header.e_shstrndx), sizeof(Elf32_Half), 1, f);
-  printf("Section header string table index:: %d (bytes) \n",header.e_shstrndx);
+  printf("  Section header string table index: %d  \n",header.e_shstrndx);
   
-  printf("End of header:\n\n");
+  printf("  End of Header\n\n");
   return header;
   
 
@@ -1023,6 +1015,8 @@ Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
   
   
 }
+
+
 
 
 // Fonction de lecture dans le cas 64 bits, prends en compte le résultat de l'appel à Lecture_identificateur
@@ -1040,42 +1034,42 @@ Elf64_Ehdr Lecture64(FILE* f, Elf_identificator headid){
   switch(header.e_type)
   {
     case 0:
-    printf("Type: NONE (No file type)\n");
+    printf("  Type:                              NONE (No file type)\n");
     break;
     
 
     case 1:
-    printf("Type: REL (Relocatable file )\n");
+    printf("  Type:                              REL (Relocatable file )\n");
     break;
 
 
     case 2:
-    printf("Type: EXEC (Executable file )\n");
+    printf("  Type:                              EXEC (Executable file )\n");
     break;
 
     
     case 3:
-    printf("Type: DYN (Shared object file )\n");
+    printf("  Type:                              DYN (Shared object file )\n");
     break;
 
     
     case 4:
-    printf("Type: CORE (Core file )\n");
+    printf("  Type:                              CORE (Core file )\n");
     break;
 
     
     case 0xff00:
-    printf("Type: LOPROC (Processor-specific )\n");
+    printf("  Type:                              LOPROC (Processor-specific )\n");
     break;
 
     
     case 0xffff:
-    printf("Type: HIPROC (Processor-specific )\n");
+    printf("  Type:                              HIPROC (Processor-specific )\n");
     break;
 
 
     default:
-    printf("Type: Inconnu\n");
+    printf("  Type:                              Inconnu\n");
     break;
   }
   
@@ -1085,786 +1079,786 @@ switch(header.e_machine)
   // ProblÃ¨me: il y a beaucoup de machines diffÃ©rentes dans elf.h. Le switch a donc été réalisé directement à partir de elf.h, avec des replace.
   {
     case 0:	
-    printf("Machine: No machine \n");
+    printf("  Machine:                           No machine \n");
     break;
 
     case 1:	
-    printf("Machine: AT&T WE 32100 \n");
+    printf("  Machine:                           AT&T WE 32100 \n");
     break;
 
     case 2:	
-    printf("Machine: SUN SPARC \n");
+    printf("  Machine:                           SUN SPARC \n");
     break;
 
     case 3:	
-    printf("Machine: Intel 80386 \n");
+    printf("  Machine:                           Intel 80386 \n");
     break;
 
     case 4:	
-    printf("Machine: Motorola m68k family \n");
+    printf("  Machine:                           Motorola m68k family \n");
     break;
 
     case 5:	
-    printf("Machine: Motorola m88k family \n");
+    printf("  Machine:                           Motorola m88k family \n");
     break;
 
     case 6:	
-    printf("Machine: Intel MCU \n");
+    printf("  Machine:                           Intel MCU \n");
     break;
 
     case 7:	
-    printf("Machine: Intel 80860 \n");
+    printf("  Machine:                           Intel 80860 \n");
     break;
 
     case 8:	
-    printf("Machine: MIPS R3000 big-endian \n");
+    printf("  Machine:                           MIPS R3000 big-endian \n");
     break;
 
     case 9:	
-    printf("Machine: IBM System/370 \n");
+    printf("  Machine:                           IBM System/370 \n");
     break;
 
     case 10:	
-    printf("Machine: MIPS R3000 little-endian \n");
+    printf("  Machine:                           MIPS R3000 little-endian \n");
     break;
 
             
-    printf("Machine: reserved 11-14 \n");
+    printf("  Machine:                           reserved 11-14 \n");
     break;
 
     case 15:	
-    printf("Machine: HPPA \n");
+    printf("  Machine:                           HPPA \n");
     break;
 
             
-    printf("Machine: reserved 16 \n");
+    printf("  Machine:                           reserved 16 \n");
     break;
 
     case 17:	
-    printf("Machine: Fujitsu VPP500 \n");
+    printf("  Machine:                           Fujitsu VPP500 \n");
     break;
 
     case 18:	
-    printf("Machine: Sun's v8plus \n");
+    printf("  Machine:                           Sun's v8plus \n");
     break;
 
     case 19:	
-    printf("Machine: Intel 80960 \n");
+    printf("  Machine:                           Intel 80960 \n");
     break;
 
     case 20:	
-    printf("Machine: PowerPC \n");
+    printf("  Machine:                           PowerPC \n");
     break;
 
     case 21:	
-    printf("Machine: PowerPC 64-bit \n");
+    printf("  Machine:                           PowerPC 64-bit \n");
     break;
 
     case 22:	
-    printf("Machine: IBM S390 \n");
+    printf("  Machine:                           IBM S390 \n");
     break;
 
     case 23:	
-    printf("Machine: IBM SPU/SPC \n");
+    printf("  Machine:                           IBM SPU/SPC \n");
     break;
 
             
-    printf("Machine: reserved 24-35 \n");
+    printf("  Machine:                           reserved 24-35 \n");
     break;
 
     case 36:	
-    printf("Machine: NEC V800 series \n");
+    printf("  Machine:                           NEC V800 series \n");
     break;
 
     case 37:	
-    printf("Machine: Fujitsu FR20 \n");
+    printf("  Machine:                           Fujitsu FR20 \n");
     break;
 
     case 38:	
-    printf("Machine: TRW RH-32 \n");
+    printf("  Machine:                           TRW RH-32 \n");
     break;
 
     case 39:	
-    printf("Machine: Motorola RCE \n");
+    printf("  Machine:                           Motorola RCE \n");
     break;
 
     case 40:	
-    printf("Machine: ARM \n");
+    printf("  Machine:                           ARM \n");
     break;
 
     case 41:	
-    printf("Machine: Digital Alpha \n");
+    printf("  Machine:                           Digital Alpha \n");
     break;
 
     case 42:	
-    printf("Machine: Hitachi SH \n");
+    printf("  Machine:                           Hitachi SH \n");
     break;
 
     case 43:	
-    printf("Machine: SPARC v9 64-bit \n");
+    printf("  Machine:                           SPARC v9 64-bit \n");
     break;
 
     case 44:	
-    printf("Machine: Siemens Tricore \n");
+    printf("  Machine:                           Siemens Tricore \n");
     break;
 
     case 45:	
-    printf("Machine: Argonaut RISC Core \n");
+    printf("  Machine:                           Argonaut RISC Core \n");
     break;
 
     case 46:	
-    printf("Machine: Hitachi H8/300 \n");
+    printf("  Machine:                           Hitachi H8/300 \n");
     break;
 
     case 47:	
-    printf("Machine: Hitachi H8/300H \n");
+    printf("  Machine:                           Hitachi H8/300H \n");
     break;
 
     case 48:	
-    printf("Machine: Hitachi H8S \n");
+    printf("  Machine:                           Hitachi H8S \n");
     break;
 
     case 49:	
-    printf("Machine: Hitachi H8/500 \n");
+    printf("  Machine:                           Hitachi H8/500 \n");
     break;
 
     case 50:	
-    printf("Machine: Intel Merced \n");
+    printf("  Machine:                           Intel Merced \n");
     break;
 
     case 51:	
-    printf("Machine: Stanford MIPS-X \n");
+    printf("  Machine:                           Stanford MIPS-X \n");
     break;
 
     case 52:	
-    printf("Machine: Motorola Coldfire \n");
+    printf("  Machine:                           Motorola Coldfire \n");
     break;
 
     case 53:	
-    printf("Machine: Motorola M68HC12 \n");
+    printf("  Machine:                           Motorola M68HC12 \n");
     break;
 
     case 54:	
-    printf("Machine: Fujitsu MMA Multimedia Accelerator \n");
+    printf("  Machine:                           Fujitsu MMA Multimedia Accelerator \n");
     break;
 
     case 55:	
-    printf("Machine: Siemens PCP \n");
+    printf("  Machine:                           Siemens PCP \n");
     break;
 
     case 56:	
-    printf("Machine: Sony nCPU embeeded RISC \n");
+    printf("  Machine:                           Sony nCPU embeeded RISC \n");
     break;
 
     case 57:	
-    printf("Machine: Denso NDR1 microprocessor \n");
+    printf("  Machine:                           Denso NDR1 microprocessor \n");
     break;
 
     case 58:	
-    printf("Machine: Motorola Start*Core processor \n");
+    printf("  Machine:                           Motorola Start*Core processor \n");
     break;
 
     case 59:	
-    printf("Machine: Toyota ME16 processor \n");
+    printf("  Machine:                           Toyota ME16 processor \n");
     break;
 
     case 60:	
-    printf("Machine: STMicroelectronic ST100 processor \n");
+    printf("  Machine:                           STMicroelectronic ST100 processor \n");
     break;
 
     case 61:	
-    printf("Machine: Advanced Logic Corp. Tinyj emb.fam \n");
+    printf("  Machine:                           Advanced Logic Corp. Tinyj emb.fam \n");
     break;
 
     case 62:	
-    printf("Machine: AMD x86-64 architecture \n");
+    printf("  Machine:                           AMD x86-64 architecture \n");
     break;
 
     case 63:	
-    printf("Machine: Sony DSP Processor \n");
+    printf("  Machine:                           Sony DSP Processor \n");
     break;
 
     case 64:	
-    printf("Machine: Digital PDP-10 \n");
+    printf("  Machine:                           Digital PDP-10 \n");
     break;
 
     case 65:	
-    printf("Machine: Digital PDP-11 \n");
+    printf("  Machine:                           Digital PDP-11 \n");
     break;
 
     case 66:	
-    printf("Machine: Siemens FX66 microcontroller \n");
+    printf("  Machine:                           Siemens FX66 microcontroller \n");
     break;
 
     case 67:	
-    printf("Machine: STMicroelectronics ST9+ 8/16 mc \n");
+    printf("  Machine:                           STMicroelectronics ST9+ 8/16 mc \n");
     break;
 
     case 68:	
-    printf("Machine: STmicroelectronics ST7 8 bit mc \n");
+    printf("  Machine:                           STmicroelectronics ST7 8 bit mc \n");
     break;
 
     case 69:	
-    printf("Machine: Motorola MC68HC16 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC16 microcontroller \n");
     break;
 
     case 70:	
-    printf("Machine: Motorola MC68HC11 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC11 microcontroller \n");
     break;
 
     case 71:	
-    printf("Machine: Motorola MC68HC08 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC08 microcontroller \n");
     break;
 
     case 72:	
-    printf("Machine: Motorola MC68HC05 microcontroller \n");
+    printf("  Machine:                           Motorola MC68HC05 microcontroller \n");
     break;
 
     case 73:	
-    printf("Machine: Silicon Graphics SVx \n");
+    printf("  Machine:                           Silicon Graphics SVx \n");
     break;
 
     case 74:	
-    printf("Machine: STMicroelectronics ST19 8 bit mc \n");
+    printf("  Machine:                           STMicroelectronics ST19 8 bit mc \n");
     break;
 
     case 75:	
-    printf("Machine: Digital VAX \n");
+    printf("  Machine:                           Digital VAX \n");
     break;
 
     case 76:	
-    printf("Machine: Axis Communications 32-bit emb.proc \n");
+    printf("  Machine:                           Axis Communications 32-bit emb.proc \n");
     break;
 
     case 77:	
-    printf("Machine: Infineon Technologies 32-bit emb.proc \n");
+    printf("  Machine:                           Infineon Technologies 32-bit emb.proc \n");
     break;
 
     case 78:	
-    printf("Machine: Element 14 64-bit DSP Processor \n");
+    printf("  Machine:                           Element 14 64-bit DSP Processor \n");
     break;
 
     case 79:	
-    printf("Machine: LSI Logic 16-bit DSP Processor \n");
+    printf("  Machine:                           LSI Logic 16-bit DSP Processor \n");
     break;
 
     case 80:	
-    printf("Machine: Donald Knuth's educational 64-bit proc \n");
+    printf("  Machine:                           Donald Knuth's educational 64-bit proc \n");
     break;
 
     case 81:	
-    printf("Machine: Harvard University machine-independent object files \n");
+    printf("  Machine:                           Harvard University machine-independent object files \n");
     break;
 
     case 82:	
-    printf("Machine: SiTera Prism \n");
+    printf("  Machine:                           SiTera Prism \n");
     break;
 
     case 83:	
-    printf("Machine: Atmel AVR 8-bit microcontroller \n");
+    printf("  Machine:                           Atmel AVR 8-bit microcontroller \n");
     break;
 
     case 84:	
-    printf("Machine: Fujitsu FR30 \n");
+    printf("  Machine:                           Fujitsu FR30 \n");
     break;
 
     case 85:	
-    printf("Machine: Mitsubishi D10V \n");
+    printf("  Machine:                           Mitsubishi D10V \n");
     break;
 
     case 86:	
-    printf("Machine: Mitsubishi D30V \n");
+    printf("  Machine:                           Mitsubishi D30V \n");
     break;
 
     case 87:	
-    printf("Machine: NEC v850 \n");
+    printf("  Machine:                           NEC v850 \n");
     break;
 
     case 88:	
-    printf("Machine: Mitsubishi M32R \n");
+    printf("  Machine:                           Mitsubishi M32R \n");
     break;
 
     case 89:	
-    printf("Machine: Matsushita MN10300 \n");
+    printf("  Machine:                           Matsushita MN10300 \n");
     break;
 
     case 90:	
-    printf("Machine: Matsushita MN10200 \n");
+    printf("  Machine:                           Matsushita MN10200 \n");
     break;
 
     case 91:	
-    printf("Machine: picoJava \n");
+    printf("  Machine:                           picoJava \n");
     break;
 
     case 92:	
-    printf("Machine: OpenRISC 32-bit embedded processor \n");
+    printf("  Machine:                           OpenRISC 32-bit embedded processor \n");
     break;
 
     case 93:	
-    printf("Machine: ARC International ARCompact \n");
+    printf("  Machine:                           ARC International ARCompact \n");
     break;
 
     case 94:	
-    printf("Machine: Tensilica Xtensa Architecture \n");
+    printf("  Machine:                           Tensilica Xtensa Architecture \n");
     break;
 
     case 95:	
-    printf("Machine: Alphamosaic VideoCore \n");
+    printf("  Machine:                           Alphamosaic VideoCore \n");
     break;
 
     case 96:	
-    printf("Machine: Thompson Multimedia General Purpose Proc \n");
+    printf("  Machine:                           Thompson Multimedia General Purpose Proc \n");
     break;
 
     case 97:	
-    printf("Machine: National Semi. 32000 \n");
+    printf("  Machine:                           National Semi. 32000 \n");
     break;
 
     case 98:	
-    printf("Machine: Tenor Network TPC \n");
+    printf("  Machine:                           Tenor Network TPC \n");
     break;
 
     case 99:	
-    printf("Machine: Trebia SNP 1000 \n");
+    printf("  Machine:                           Trebia SNP 1000 \n");
     break;
 
     case 100:	
-    printf("Machine: STMicroelectronics ST200 \n");
+    printf("  Machine:                           STMicroelectronics ST200 \n");
     break;
 
     case 101:	
-    printf("Machine: Ubicom IP2xxx \n");
+    printf("  Machine:                           Ubicom IP2xxx \n");
     break;
 
     case 102:	
-    printf("Machine: MAX processor \n");
+    printf("  Machine:                           MAX processor \n");
     break;
 
     case 103:	
-    printf("Machine: National Semi. CompactRISC \n");
+    printf("  Machine:                           National Semi. CompactRISC \n");
     break;
 
     case 104:	
-    printf("Machine: Fujitsu F2MC16 \n");
+    printf("  Machine:                           Fujitsu F2MC16 \n");
     break;
 
     case 105:	
-    printf("Machine: Texas Instruments msp430 \n");
+    printf("  Machine:                           Texas Instruments msp430 \n");
     break;
 
     case 106:	
-    printf("Machine: Analog Devices Blackfin DSP \n");
+    printf("  Machine:                           Analog Devices Blackfin DSP \n");
     break;
 
     case 107:	
-    printf("Machine: Seiko Epson S1C33 family \n");
+    printf("  Machine:                           Seiko Epson S1C33 family \n");
     break;
 
     case 108:	
-    printf("Machine: Sharp embedded microprocessor \n");
+    printf("  Machine:                           Sharp embedded microprocessor \n");
     break;
 
     case 109:	
-    printf("Machine: Arca RISC \n");
+    printf("  Machine:                           Arca RISC \n");
     break;
 
     case 110:	
-    printf("Machine: PKU-Unity & MPRC Peking Uni. mc series \n");
+    printf("  Machine:                           PKU-Unity & MPRC Peking Uni. mc series \n");
     break;
 
     case 111:	
-    printf("Machine: eXcess configurable cpu \n");
+    printf("  Machine:                           eXcess configurable cpu \n");
     break;
 
     case 112:	
-    printf("Machine: Icera Semi. Deep Execution Processor \n");
+    printf("  Machine:                           Icera Semi. Deep Execution Processor \n");
     break;
 
     case 113:	
-    printf("Machine: Altera Nios II \n");
+    printf("  Machine:                           Altera Nios II \n");
     break;
 
     case 114:	
-    printf("Machine: National Semi. CompactRISC CRX \n");
+    printf("  Machine:                           National Semi. CompactRISC CRX \n");
     break;
 
     case 115:	
-    printf("Machine: Motorola XGATE \n");
+    printf("  Machine:                           Motorola XGATE \n");
     break;
 
     case 116:	
-    printf("Machine: Infineon C16x/XC16x \n");
+    printf("  Machine:                           Infineon C16x/XC16x \n");
     break;
 
     case 117:	
-    printf("Machine: Renesas M16C \n");
+    printf("  Machine:                           Renesas M16C \n");
     break;
 
     case 118:	
-    printf("Machine: Microchip Technology dsPIC30F \n");
+    printf("  Machine:                           Microchip Technology dsPIC30F \n");
     break;
 
     case 119:	
-    printf("Machine: Freescale Communication Engine RISC \n");
+    printf("  Machine:                           Freescale Communication Engine RISC \n");
     break;
 
     case 120:	
-    printf("Machine: Renesas M32C \n");
+    printf("  Machine:                           Renesas M32C \n");
     break;
 
     case 131:	
-    printf("Machine: Altium TSK3000 \n");
+    printf("  Machine:                           Altium TSK3000 \n");
     break;
 
     case 132:	
-    printf("Machine: Freescale RS08 \n");
+    printf("  Machine:                           Freescale RS08 \n");
     break;
 
     case 133:	
-    printf("Machine: Analog Devices SHARC family \n");
+    printf("  Machine:                           Analog Devices SHARC family \n");
     break;
 
     case 134:	
-    printf("Machine: Cyan Technology eCOG2 \n");
+    printf("  Machine:                           Cyan Technology eCOG2 \n");
     break;
 
     case 135:	
-    printf("Machine: Sunplus S+core7 RISC \n");
+    printf("  Machine:                           Sunplus S+core7 RISC \n");
     break;
 
     case 136:	
-    printf("Machine: New Japan Radio (NJR) 24-bit DSP \n");
+    printf("  Machine:                           New Japan Radio (NJR) 24-bit DSP \n");
     break;
 
     case 137:	
-    printf("Machine: Broadcom VideoCore III \n");
+    printf("  Machine:                           Broadcom VideoCore III \n");
     break;
 
     case 138:	
-    printf("Machine: RISC for Lattice FPGA \n");
+    printf("  Machine:                           RISC for Lattice FPGA \n");
     break;
 
     case 139:	
-    printf("Machine: Seiko Epson C17 \n");
+    printf("  Machine:                           Seiko Epson C17 \n");
     break;
 
     case 140:	
-    printf("Machine: Texas Instruments TMS320C6000 DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C6000 DSP \n");
     break;
 
     case 141:	
-    printf("Machine: Texas Instruments TMS320C2000 DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C2000 DSP \n");
     break;
 
     case 142:	
-    printf("Machine: Texas Instruments TMS320C55x DSP \n");
+    printf("  Machine:                           Texas Instruments TMS320C55x DSP \n");
     break;
 
     case 143:	
-    printf("Machine: Texas Instruments App. Specific RISC \n");
+    printf("  Machine:                           Texas Instruments App. Specific RISC \n");
     break;
 
     case 144:	
-    printf("Machine: Texas Instruments Prog. Realtime Unit \n");
+    printf("  Machine:                           Texas Instruments Prog. Realtime Unit \n");
     break;
 
     case 160:	
-    printf("Machine: STMicroelectronics 64bit VLIW DSP \n");
+    printf("  Machine:                           STMicroelectronics 64bit VLIW DSP \n");
     break;
 
     case 161:	
-    printf("Machine: Cypress M8C \n");
+    printf("  Machine:                           Cypress M8C \n");
     break;
 
     case 162:	
-    printf("Machine: Renesas R32C \n");
+    printf("  Machine:                           Renesas R32C \n");
     break;
 
     case 163:	
-    printf("Machine: NXP Semi. TriMedia \n");
+    printf("  Machine:                           NXP Semi. TriMedia \n");
     break;
 
     case 164:	
-    printf("Machine: QUALCOMM DSP6 \n");
+    printf("  Machine:                           QUALCOMM DSP6 \n");
     break;
 
     case 165:	
-    printf("Machine: Intel 8051 and variants \n");
+    printf("  Machine:                           Intel 8051 and variants \n");
     break;
 
     case 166:	
-    printf("Machine: STMicroelectronics STxP7x \n");
+    printf("  Machine:                           STMicroelectronics STxP7x \n");
     break;
 
     case 167:	
-    printf("Machine: Andes Tech. compact code emb. RISC \n");
+    printf("  Machine:                           Andes Tech. compact code emb. RISC \n");
     break;
 
     case 168:	
-    printf("Machine: Cyan Technology eCOG1X \n");
+    printf("  Machine:                           Cyan Technology eCOG1X \n");
     break;
 
     case 169:	
-    printf("Machine: Dallas Semi. MAXQ30 mc \n");
+    printf("  Machine:                           Dallas Semi. MAXQ30 mc \n");
     break;
 
     case 170:	
-    printf("Machine: New Japan Radio (NJR) 16-bit DSP \n");
+    printf("  Machine:                           New Japan Radio (NJR) 16-bit DSP \n");
     break;
 
     case 171:	
-    printf("Machine: M2000 Reconfigurable RISC \n");
+    printf("  Machine:                           M2000 Reconfigurable RISC \n");
     break;
 
     case 172:	
-    printf("Machine: Cray NV2 vector architecture \n");
+    printf("  Machine:                           Cray NV2 vector architecture \n");
     break;
 
     case 173:	
-    printf("Machine: Renesas RX \n");
+    printf("  Machine:                           Renesas RX \n");
     break;
 
     case 174:	
-    printf("Machine: Imagination Tech. META \n");
+    printf("  Machine:                           Imagination Tech. META \n");
     break;
 
     case 175:	
-    printf("Machine: MCST Elbrus \n");
+    printf("  Machine:                           MCST Elbrus \n");
     break;
 
     case 176:	
-    printf("Machine: Cyan Technology eCOG16 \n");
+    printf("  Machine:                           Cyan Technology eCOG16 \n");
     break;
 
     case 177:	
-    printf("Machine: National Semi. CompactRISC CR16 \n");
+    printf("  Machine:                           National Semi. CompactRISC CR16 \n");
     break;
 
     case 178:	
-    printf("Machine: Freescale Extended Time Processing Unit \n");
+    printf("  Machine:                           Freescale Extended Time Processing Unit \n");
     break;
 
     case 179:	
-    printf("Machine: Infineon Tech. SLE9X \n");
+    printf("  Machine:                           Infineon Tech. SLE9X \n");
     break;
 
     case 180:	
-    printf("Machine: Intel L10M \n");
+    printf("  Machine:                           Intel L10M \n");
     break;
 
     case 181:	
-    printf("Machine: Intel K10M \n");
+    printf("  Machine:                           Intel K10M \n");
     break;
 
     case 183:	
-    printf("Machine: ARM AARCH64 \n");
+    printf("  Machine:                           ARM AARCH64 \n");
     break;
 
     case 185:	
-    printf("Machine: Amtel 32-bit microprocessor \n");
+    printf("  Machine:                           Amtel 32-bit microprocessor \n");
     break;
 
     case 186:	
-    printf("Machine: STMicroelectronics STM8 \n");
+    printf("  Machine:                           STMicroelectronics STM8 \n");
     break;
 
     case 187:	
-    printf("Machine: Tileta TILE64 \n");
+    printf("  Machine:                           Tileta TILE64 \n");
     break;
 
     case 188:	
-    printf("Machine: Tilera TILEPro \n");
+    printf("  Machine:                           Tilera TILEPro \n");
     break;
 
     case 189:	
-    printf("Machine: Xilinx MicroBlaze \n");
+    printf("  Machine:                           Xilinx MicroBlaze \n");
     break;
 
     case 190:	
-    printf("Machine: NVIDIA CUDA \n");
+    printf("  Machine:                           NVIDIA CUDA \n");
     break;
 
     case 191:	
-    printf("Machine: Tilera TILE-Gx \n");
+    printf("  Machine:                           Tilera TILE-Gx \n");
     break;
 
     case 192:	
-    printf("Machine: CloudShield \n");
+    printf("  Machine:                           CloudShield \n");
     break;
 
     case 193:	
-    printf("Machine: KIPO-KAIST Core-A 1st gen. \n");
+    printf("  Machine:                           KIPO-KAIST Core-A 1st gen. \n");
     break;
 
     case 194:	
-    printf("Machine: KIPO-KAIST Core-A 2nd gen. \n");
+    printf("  Machine:                           KIPO-KAIST Core-A 2nd gen. \n");
     break;
 
     case 195:	
-    printf("Machine: Synopsys ARCompact V2 \n");
+    printf("  Machine:                           Synopsys ARCompact V2 \n");
     break;
 
     case 196:	
-    printf("Machine: Open8 RISC \n");
+    printf("  Machine:                           Open8 RISC \n");
     break;
 
     case 197:	
-    printf("Machine: Renesas RL78 \n");
+    printf("  Machine:                           Renesas RL78 \n");
     break;
 
     case 198:	
-    printf("Machine: Broadcom VideoCore V \n");
+    printf("  Machine:                           Broadcom VideoCore V \n");
     break;
 
     case 199:	
-    printf("Machine: Renesas 78KOR \n");
+    printf("  Machine:                           Renesas 78KOR \n");
     break;
 
     case 200:	
-    printf("Machine: Freescale 56800EX DSC \n");
+    printf("  Machine:                           Freescale 56800EX DSC \n");
     break;
 
     case 201:	
-    printf("Machine: Beyond BA1 \n");
+    printf("  Machine:                           Beyond BA1 \n");
     break;
 
     case 202:	
-    printf("Machine: Beyond BA2 \n");
+    printf("  Machine:                           Beyond BA2 \n");
     break;
 
     case 203:	
-    printf("Machine: XMOS xCORE \n");
+    printf("  Machine:                           XMOS xCORE \n");
     break;
 
     case 204:	
-    printf("Machine: Microchip 8-bit PIC(r) \n");
+    printf("  Machine:                           Microchip 8-bit PIC(r) \n");
     break;
 
     case 210:	
-    printf("Machine: KM211 KM32 \n");
+    printf("  Machine:                           KM211 KM32 \n");
     break;
 
     case 211:	
-    printf("Machine: KM211 KMX32 \n");
+    printf("  Machine:                           KM211 KMX32 \n");
     break;
 
     case 212:	
-    printf("Machine: KM211 KMX16 \n");
+    printf("  Machine:                           KM211 KMX16 \n");
     break;
 
     case 213:	
-    printf("Machine: KM211 KMX8 \n");
+    printf("  Machine:                           KM211 KMX8 \n");
     break;
 
     case 214:	
-    printf("Machine: KM211 KVARC \n");
+    printf("  Machine:                           KM211 KVARC \n");
     break;
 
     case 215:	
-    printf("Machine: Paneve CDP \n");
+    printf("  Machine:                           Paneve CDP \n");
     break;
 
     case 216:	
-    printf("Machine: Cognitive Smart Memory Processor \n");
+    printf("  Machine:                           Cognitive Smart Memory Processor \n");
     break;
 
     case 217:	
-    printf("Machine: Bluechip CoolEngine \n");
+    printf("  Machine:                           Bluechip CoolEngine \n");
     break;
 
     case 218:	
-    printf("Machine: Nanoradio Optimized RISC \n");
+    printf("  Machine:                           Nanoradio Optimized RISC \n");
     break;
 
     case 219:	
-    printf("Machine: CSR Kalimba \n");
+    printf("  Machine:                           CSR Kalimba \n");
     break;
 
     case 220:	
-    printf("Machine: Zilog Z80 \n");
+    printf("  Machine:                           Zilog Z80 \n");
     break;
 
     case 221:	
-    printf("Machine: Controls and Data Services VISIUMcore \n");
+    printf("  Machine:                           Controls and Data Services VISIUMcore \n");
     break;
 
     case 222:	
-    printf("Machine: FTDI Chip FT32 \n");
+    printf("  Machine:                           FTDI Chip FT32 \n");
     break;
 
     case 223:	
-    printf("Machine: Moxie processor \n");
+    printf("  Machine:                           Moxie processor \n");
     break;
 
     case 224:	
-    printf("Machine: AMD GPU \n");
+    printf("  Machine:                           AMD GPU \n");
     break;
 
     case 243:	
-    printf("Machine: RISC-V \n");
+    printf("  Machine:                           RISC-V \n");
     break;
 
     case 247:	
-    printf("Machine: Linux BPF -- in-kernel virtual machine \n");
+    printf("  Machine:                           Linux BPF -- in-kernel virtual machine \n");
     break;
 
     default:
-    printf("Type: Inconnu\n");
+    printf("  Machine:                           Inconnue\n");
     break;
   }
   
   // Lit et affiche la version du fichier
   fread(&(header.e_version), sizeof(Elf64_Word), 1, f);
-  printf("Version: 0x%x\n",header.e_version);
+  printf("  Version:                           0x%x\n",header.e_version);
   
   // Lit et affiche l'addresse de dÃ©part
   fread(&(header.e_entry), sizeof(Elf64_Addr), 1, f);
-  printf("Entry point address: 0x%x\n",header.e_entry);
+  printf("  Entry point address:               0x%x\n",header.e_entry);
   
   // Lit et affiche l'offset permettant d'arriver sur les headers du programme
   fread(&(header.e_phoff), sizeof(Elf64_Off), 1, f);
-  printf("Start of program headers: %d (bytes into file)\n",header.e_phoff);
+  printf("  Start of program headers:          %d (bytes into file)\n",header.e_phoff);
   
   
   // Lit et affiche l'offset permettant d'arriver sur les headers des sections
   fread(&(header.e_shoff), sizeof(Elf64_Off), 1, f);
-  printf("Start of section headers: %d (bytes into file)\n",header.e_shoff);
+  printf("  Start of section headers:          %d (bytes into file)\n",header.e_shoff);
   
   // Lit et affiche les flags, n'affiche que la valeur en hexadecimal, comme readelf.
   fread(&(header.e_flags), sizeof(Elf64_Word), 1, f);
-  printf("Flags: 0x%x \n",header.e_flags);
+  printf("  Flags:                             0x%x \n",header.e_flags);
   
   // Lit et affiche la taille du header ( celui en cours de lecture)
   fread(&(header.e_ehsize), sizeof(Elf64_Half), 1, f);
-  printf("Size of this header: %d (bytes) \n",header.e_ehsize);
+  printf("  Size of this header:               %d (bytes) \n",header.e_ehsize);
   
   
   // Lit et affiche la taille des headers du programme
   fread(&(header.e_phentsize), sizeof(Elf64_Half), 1, f);
-  printf("Size of program headers: %d (bytes) \n",header.e_phentsize);
+  printf("  Size of program headers:           %d (bytes) \n",header.e_phentsize);
   
   
   // Lit et affiche le nombre de headers du programme
   fread(&(header.e_phnum), sizeof(Elf64_Half), 1, f);
-  printf("Number of program headers: %d (bytes) \n",header.e_phnum);
+  printf("  Number of program headers:         %d \n",header.e_phnum);
   
   
   
   // Lit et affiche la taille des headers de section
   fread(&(header.e_shentsize), sizeof(Elf64_Half), 1, f);
-  printf("Size of section headers: %d (bytes) \n",header.e_shentsize);
+  printf("  Size of section headers:           %d (bytes) \n",header.e_shentsize);
   
   
   
   // Lit et affiche le nombre de headers de section
   fread(&(header.e_shnum), sizeof(Elf64_Half), 1, f);
-  printf("Number of section headers: %d (bytes) \n",header.e_shnum);
+  printf("  Number of section headers:         %d \n",header.e_shnum);
   
   
   
   // Lit et affiche e_shstrndx
   fread(&(header.e_shstrndx), sizeof(Elf64_Half), 1, f);
-  printf("Section header string table index:: %d (bytes) \n",header.e_shstrndx);
+  printf("  Section header string table index: %d  \n",header.e_shstrndx);
   
   printf("End of Header\n\n");
   return header;
