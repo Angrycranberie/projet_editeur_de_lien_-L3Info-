@@ -11,7 +11,7 @@ readelf_x: entete.o readelf_x.o readsection.o
 	${CC} -o readelf_x readelf_x.o entete.o readsection.o
  
 readelf_sym: entete.o readelf_sym.o symboltable.o
-	${CC} -o readelf_s readelf_sym.o entete.o symboltable.o
+	${CC} -o readelf_sym readelf_sym.o entete.o symboltable.o
   
 entete.o: entete.c entete.h
 	${CC} ${CFLAGS} -c entete.c
