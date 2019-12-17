@@ -57,7 +57,7 @@ void readsection_id_64 (int id, FILE* f, Elf64_Ehdr header){
   for (int i = 0; i < sh_size; i++){
     if (i%16==0) printf("  ");
     fread(&temp,sizeof(unsigned char),1,f);
-    if (temp!=0) printf("%c",temp);
+    if (temp>=33 && temp <=126) printf("%c",temp);
     else printf(".");
     if (i%16==15) printf("\n");
   }
@@ -150,7 +150,7 @@ void readsection_id_32 (int id, FILE* f, Elf32_Ehdr header){
   for (int i = 0; i < sh_size; i++){
     if (i%16==0) printf("  ");
     fread(&temp,sizeof(unsigned char),1,f);
-    if (temp!=0) printf("%c",temp);
+    if (temp>=33 && temp <=126) printf("%c",temp);
     else printf(".");
     if (i%16==15) printf("\n");
   }
