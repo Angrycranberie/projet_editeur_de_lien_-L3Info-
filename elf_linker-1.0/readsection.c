@@ -2,7 +2,6 @@
 #include <elf.h>
 #include <string.h>
 #include "readsection.h"
-#include "entete.h"
 
 
 void readsection_id_64 (int id, FILE* f, Elf64_Ehdr header){
