@@ -5,7 +5,7 @@
 // Lit l'en-tête d'un fichier elf passé en descripteur
 // retourne la structure d'en-tête remplie.
 
-Elf_identificator Lecture_identificateur (FILE* f){
+Elf_identificator Lecture_identificateur_vocal (FILE* f){
   Elf_identificator header;
   int i;
   printf("\n\nELF Header:\n");
@@ -164,10 +164,163 @@ Elf_identificator Lecture_identificateur (FILE* f){
 
 }
 
+ //Version silentieuse
+Elf_identificator Lecture_identificateur (FILE* f){
+  Elf_identificator header;
+  int i;
+  // Récupère l'identificateur dans la structure
+  fread(header.e_ident, sizeof(unsigned char), EI_NIDENT, f);
+
+  // Vérifie les nombres magiques
+  // retourne 1 si les "nombres magiques" ne correspondent pas à ceux d'un fichier elf.
+  if (header.e_ident[0]!=0x7f) {
+    fprintf(stderr,"  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    return header;
+    }
+  else if (header.e_ident[1]!='E') {
+    fprintf(stderr,"  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    return header;
+    }
+  else if (header.e_ident[2]!='L') {
+    fprintf(stderr,"  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    return header;
+    }
+  else if (header.e_ident[3]!='F') {
+    fprintf(stderr,"  Nombre magique invalide ! Il ne s'agit pas d'un fichier elf\n");
+    return header;
+    }
+
+  return header;
+}
+
+
+ //Version silentieuse 32 bits
+Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
+  Elf32_Ehdr header;
+  int i;
+
+  //R�cup�re ce qui � d�ja �t� lu et pass� en argument
+  for (i=0;i<EI_NIDENT;i++){
+    header.e_ident[i] = headid.e_ident[i];
+  }
+
+  // Lit le type du fichier elf
+  fread(&(header.e_type), sizeof(Elf32_Half), 1, f);
+  
+  // Lit le type de machine
+  fread(&(header.e_machine), sizeof(Elf32_Half), 1, f);
+
+
+  // Lit la version du fichier
+  fread(&(header.e_version), sizeof(Elf32_Word), 1, f);
+
+  // Lit l'addresse de départ
+  fread(&(header.e_entry), sizeof(Elf32_Addr), 1, f);
+
+  // Lit l'offset permettant d'arriver sur les headers du programme
+  fread(&(header.e_phoff), sizeof(Elf32_Off), 1, f);
+
+
+  // Lit l'offset permettant d'arriver sur les headers des sections
+  fread(&(header.e_shoff), sizeof(Elf32_Off), 1, f);
+
+  // Lit les flags, n'affiche que la valeur en hexadecimal, comme readelf.
+  fread(&(header.e_flags), sizeof(Elf32_Word), 1, f);
+
+  // Lit la taille du header ( celui en cours de lecture)
+  fread(&(header.e_ehsize), sizeof(Elf32_Half), 1, f);
+
+
+  // Lit la taille des headers du programme
+  fread(&(header.e_phentsize), sizeof(Elf32_Half), 1, f);
+
+
+  // Lit le nombre de headers du programme
+  fread(&(header.e_phnum), sizeof(Elf32_Half), 1, f);
+
+
+
+  // Lit et affiche la taille des headers de section
+  fread(&(header.e_shentsize), sizeof(Elf32_Half), 1, f);
+
+
+
+  // Lit le nombre de headers de section
+  fread(&(header.e_shnum), sizeof(Elf32_Half), 1, f);
+
+
+
+  // Lit e_shstrndx
+  fread(&(header.e_shstrndx), sizeof(Elf32_Half), 1, f);
+  return header;
+
+}
+
+ //Version silentieuse 64 bits
+Elf64_Ehdr Lecture64(FILE* f, Elf_identificator headid){
+  Elf64_Ehdr header;
+  int i;
+
+  //R�cup�re ce qui � d�ja �t� lu et pass� en argument
+  for (i=0;i<EI_NIDENT;i++){
+    header.e_ident[i] = headid.e_ident[i];
+  }
+
+  // Lit le type du fichier elf
+  fread(&(header.e_type), sizeof(Elf64_Half), 1, f);
+  
+  // Lit le type de machine
+  fread(&(header.e_machine), sizeof(Elf64_Half), 1, f);
+
+
+  // Lit la version du fichier
+  fread(&(header.e_version), sizeof(Elf64_Word), 1, f);
+
+  // Lit l'addresse de départ
+  fread(&(header.e_entry), sizeof(Elf64_Addr), 1, f);
+
+  // Lit l'offset permettant d'arriver sur les headers du programme
+  fread(&(header.e_phoff), sizeof(Elf64_Off), 1, f);
+
+
+  // Lit l'offset permettant d'arriver sur les headers des sections
+  fread(&(header.e_shoff), sizeof(Elf64_Off), 1, f);
+
+  // Lit les flags, n'affiche que la valeur en hexadecimal, comme readelf.
+  fread(&(header.e_flags), sizeof(Elf64_Word), 1, f);
+
+  // Lit la taille du header ( celui en cours de lecture)
+  fread(&(header.e_ehsize), sizeof(Elf64_Half), 1, f);
+
+
+  // Lit la taille des headers du programme
+  fread(&(header.e_phentsize), sizeof(Elf64_Half), 1, f);
+
+
+  // Lit le nombre de headers du programme
+  fread(&(header.e_phnum), sizeof(Elf64_Half), 1, f);
+
+
+
+  // Lit et affiche la taille des headers de section
+  fread(&(header.e_shentsize), sizeof(Elf64_Half), 1, f);
+
+
+
+  // Lit le nombre de headers de section
+  fread(&(header.e_shnum), sizeof(Elf64_Half), 1, f);
+
+
+
+  // Lit e_shstrndx
+  fread(&(header.e_shstrndx), sizeof(Elf64_Half), 1, f);
+  return header;
+
+}
 
 
 // Fonction de lecture dans le cas 32 bits, prends en compte le r�sultat de l'appel � Lecture_identificateur
-Elf32_Ehdr Lecture32(FILE* f, Elf_identificator headid){
+Elf32_Ehdr Lecture32_vocal(FILE* f, Elf_identificator headid){
   Elf32_Ehdr header;
   int i;
 
@@ -1020,7 +1173,7 @@ switch(header.e_machine)
 
 
 // Fonction de lecture dans le cas 64 bits, prends en compte le r�sultat de l'appel � Lecture_identificateur
-Elf64_Ehdr Lecture64(FILE* f, Elf_identificator headid){
+Elf64_Ehdr Lecture64_vocal(FILE* f, Elf_identificator headid){
   Elf64_Ehdr header;
   int i;
 

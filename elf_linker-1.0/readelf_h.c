@@ -14,11 +14,11 @@ int main (int argc, char ** argv){
     return 1;
   }
   Elf_identificator headid;
-  headid = Lecture_identificateur(f);
+  headid = Lecture_identificateur_vocal(f);
   if (headid.e_ident[4] == ELFCLASS32){
-    Lecture32(f,headid);
+    Lecture32_vocal(f,headid);
   }
   else if (headid.e_ident[4] == ELFCLASS64){
-    Lecture64(f,headid);
+    Lecture64_vocal(f,headid);
   }
 }
