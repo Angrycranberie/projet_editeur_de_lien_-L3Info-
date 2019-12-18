@@ -19,7 +19,7 @@ int main (int argc, char ** argv){
   if (headid.e_ident[4] == ELFCLASS32){
     Elf32_Ehdr header;
     header = Lecture32(f,headid);
-    // ajouter la version 32 bits
+    search_reloca_tables_32(f, header);
   }
   else if (headid.e_ident[4] == ELFCLASS64){
     Elf64_Ehdr header;
