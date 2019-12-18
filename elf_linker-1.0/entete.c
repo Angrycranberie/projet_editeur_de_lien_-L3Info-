@@ -169,7 +169,6 @@ Elf_identificator Lecture_identificateur_vocal(FILE *f)
 Elf_identificator Lecture_identificateur(FILE *f)
 {
   Elf_identificator header;
-  int i;
   // Récupère l'identificateur dans la structure
   fread(header.e_ident, sizeof(unsigned char), EI_NIDENT, f);
 

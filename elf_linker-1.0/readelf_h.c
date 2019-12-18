@@ -27,4 +27,6 @@ int main(int argc, char **argv)
   {
     Lecture64_vocal(f, headid);
   }
+
+	return 0;
 }
