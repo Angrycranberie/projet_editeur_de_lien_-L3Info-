@@ -43,7 +43,7 @@ void readsection_id_64(int id, FILE *f, Elf64_Ehdr header)
   fseek(f, offset, SEEK_SET);
 
   // On lit le contenu de la section
-  for (int i = 0; i < sh_size; i++)
+  for (i = 0; i < sh_size; i++)
   {
     if (i % 16 == 0)
       printf("  0x%08x ", offset + i);
@@ -59,7 +59,7 @@ void readsection_id_64(int id, FILE *f, Elf64_Ehdr header)
   // On rajoute un affichage en caractères (au cas ou, pour imiter la sortie de readelf)
   fseek(f, offset, SEEK_SET);
   printf("\nEn ascii cela donne :\n");
-  for (int i = 0; i < sh_size; i++)
+  for (i = 0; i < sh_size; i++)
   {
     if (i % 16 == 0)
       printf("  ");
@@ -150,7 +150,7 @@ void readsection_id_32(int id, FILE *f, Elf32_Ehdr header)
   fseek(f, offset, SEEK_SET);
 
   // On lit le contenu de la section
-  for (int i = 0; i < sh_size; i++)
+  for (i = 0; i < sh_size; i++)
   {
     if (i % 16 == 0)
       printf("  0x%08x ", offset + i);
@@ -166,7 +166,7 @@ void readsection_id_32(int id, FILE *f, Elf32_Ehdr header)
   // On rajoute un affichage en caractères (au cas ou, pour imiter la sortie de readelf)
   fseek(f, offset, SEEK_SET);
   printf("\nEn ascii cela donne :\n");
-  for (int i = 0; i < sh_size; i++)
+  for (i = 0; i < sh_size; i++)
   {
     if (i % 16 == 0)
       printf("  ");
