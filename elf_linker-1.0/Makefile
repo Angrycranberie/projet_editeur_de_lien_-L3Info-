@@ -1,6 +1,6 @@
 CC = gcc
 
-all : readelf_entete readelf_section readelf_contenu readelf_symbole readelf_reimplant
+all : readelf_entete readelf_section readelf_contenu readelf_symbole readelf_reimplant etape6
 
 readelf_entete: entete.o readelf_entete.o
 	${CC} -o readelf_entete entete.o readelf_entete.o
@@ -16,6 +16,9 @@ readelf_symbole: entete.o readelf_symbole.o symboltable.o
  
 readelf_reimplant: entete.o readelf_reimplant.o reloca.o
 	${CC} -o readelf_reimplant readelf_reimplant.o entete.o reloca.o
+  
+etape6: entete.o etape6.o progbits.o
+	${CC} -o etape6 etape6.o entete.o progbits.o
   
 entete.o: entete.c entete.h
 	${CC} ${CFLAGS} -c entete.c
@@ -46,9 +49,15 @@ reloca.o: reloca.c reloca.h
  
 readelf_reimplant.o: readelf_reimplant.c entete.h reloca.h
 	${CC} ${CFLAGS} -c readelf_reimplant.c
+  
+progbits.o: progbits.c progbits.h
+	${CC} ${CFLAGS} -c progbits.c
+ 
+etape6.o: etape6.c entete.h progbits.h
+	${CC} ${CFLAGS} -c etape6.c
 
 clean_exec:
-	rm *.o readelf_entete readelf_section readelf_contenu readelf_symbole readelf_reimplant
+	rm *.o readelf_entete readelf_section readelf_contenu readelf_symbole readelf_reimplant etape6
 
 clean_test:
 	rm Examples_loader/*.o
