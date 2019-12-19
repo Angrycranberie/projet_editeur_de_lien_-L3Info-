@@ -29,7 +29,20 @@ do
 	do
 		name=$(basename $j .o)
 		arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out
-		./readelf_$i Examples_loader/$name.o > Resultat/$i/Our_$name.out
+		if [ "$mods" = "h" ]
+		then
+			m=entete
+		elif [ "$mods" = "S" ]
+		then
+			m=section
+		elif [ "$mods" = "s" ]
+		then
+			s=symbole
+		elif [ "$mods" = "r" ]
+		then
+			m=reimplant
+		fi
+			./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
 	done
 done
 echo "Resultats disponibles"
