@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 
   // ATTENTION : pas fonctionnel pour le moment
   // En attente de modularisation
-  Elf64_Ehdr header = Lecture(f);
+  Elf64_Ehdr header = read_header(f);
   if (header.e_ident[EI_CLASS] == ELFCLASS32 && strcmp(argv[2], "name") == 0)
   {
     readsection_name_32(argv[3], f, header);

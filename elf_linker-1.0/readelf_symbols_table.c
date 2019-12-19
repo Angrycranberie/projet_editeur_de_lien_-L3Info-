@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
   // ATTENTION : pas fonctionnel pour le moment
   // En attente de modularisation
-  Elf64_Ehdr header = Lecture(f);
+  Elf64_Ehdr header = read_header(f);
   if (header.e_ident[EI_CLASS] == ELFCLASS32)
   {
     search_symbols_tables_32(f, header);

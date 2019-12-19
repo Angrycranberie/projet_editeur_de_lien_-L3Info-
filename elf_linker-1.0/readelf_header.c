@@ -18,7 +18,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    Elf64_Ehdr header = Lecture(f);
-    affichage_header(header);
+    Elf64_Ehdr header = read_header(f);
+    print_header(header);
     return 0;
 }
