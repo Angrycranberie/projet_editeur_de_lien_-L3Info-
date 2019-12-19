@@ -14,7 +14,7 @@ int main (int argc, char ** argv){
   Merge_table_progbits Mtable;
   FILE * f1;
   FILE * f2;
-  Table_sections_64 table_progbits;
+  Table_sections table_progbits;
   f1 = fopen(argv[1],"r");
   if (f1==NULL){
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
@@ -35,7 +35,8 @@ int main (int argc, char ** argv){
     Elf32_Ehdr header2;
     header1 = Lecture32(f1,headid1);
     header2 = Lecture32(f2,headid2);
-    // ajouter la version 32 bits une fois faite
+    table_progbits = get_merged_progbits_32 (f1, f2, header1, header2, Mtable);
+    affiche_table_section(table_progbits);
   }
   else if (headid1.e_ident[4] == ELFCLASS64 && headid2.e_ident[4] == ELFCLASS64){
     Elf64_Ehdr header1;

@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <elf.h>
-#include "entete.h"
+#include "header.h"
 #include "tablesection.h"
 
-// Donne les informations sur les sections du fichier elf passées en argument
+// Donne les informations sur les sections du fichier ELF passé en argument
 int main(int argc, char **argv)
 {
   if (argc != 2)
@@ -18,18 +18,16 @@ int main(int argc, char **argv)
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
     return 1;
   }
-  Elf_identificator headid;
-  headid = Lecture_identificateur(f);
-  if (headid.e_ident[4] == ELFCLASS32)
+
+  // ATTENTION : pas fonctionnel pour le moment
+  // En attente de modularisation
+  Elf64_Ehdr header = read_header(f);
+  if (header.e_ident[EI_CLASS] == ELFCLASS32)
   {
-    Elf32_Ehdr header;
-    header = Lecture32(f, headid);
     Tablesection32(f, header);
   }
-  else if (headid.e_ident[4] == ELFCLASS64)
+  else if (header.e_ident[EI_CLASS] == ELFCLASS64)
   {
-    Elf64_Ehdr header;
-    header = Lecture64(f, headid);
     Tablesection64(f, header);
   }
   return 0;

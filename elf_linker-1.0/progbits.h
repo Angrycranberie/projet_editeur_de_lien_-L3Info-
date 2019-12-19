@@ -18,35 +18,36 @@ typedef struct
   int offset;
   char name[100];
   unsigned char* content;
-} Elf64_Section_progbits;
+} Section_progbits;
 
 
-typedef struct
+typedef struct 
 {
   int nbSections;
-  Elf64_Section_progbits sections[100];
+  Section_progbits sections[100];
   int index_section[100];
   // Indique si une fusion à eu lieu : O pour pas de fusion, 1 pour fusion
   int fusion [100];
   Merge_table_progbits Mtable;
-} Table_sections_64;
+} Table_sections;
 
+Section_progbits init_section_size(int taille);
+void affiche_table_section(Table_sections Tablesec);
 
+// Versions 32 bits
+void getname_section_32(FILE* f, Elf32_Ehdr header, int id, char* nom);
+Merge_table_progbits initmerge_32(FILE* f2, Elf32_Ehdr header1, Elf32_Ehdr header2);
+Merge_table_progbits search_progbits_f2_32(FILE* f1, FILE* f2, Elf32_Ehdr header1, Elf32_Ehdr header2);
+int verif_fusion_progbits_32 (int id, Merge_table_progbits Mtable, Elf32_Ehdr header);
+Table_sections get_merged_progbits_32 (FILE* f1, FILE* f2, Elf32_Ehdr header1, Elf32_Ehdr header2, Merge_table_progbits Mtable);
 
-void getname_section_64(FILE* f, Elf64_Ehdr header1, int id, char* nom);
-
+// Versions 64 bits
+void getname_section_64(FILE* f, Elf64_Ehdr header, int id, char* nom);
+Merge_table_progbits initmerge_64(FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2);
 Merge_table_progbits search_progbits_f2_64(FILE* f1, FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2);
+int verif_fusion_progbits_64 (int id, Merge_table_progbits Mtable, Elf64_Ehdr header);
 
-int verif_fusion_progbits (int id, Merge_table_progbits Mtable, Elf64_Ehdr header);
+Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2, Merge_table_progbits Mtable);
 
-void printsection_64(FILE* f, Elf64_Shdr section);
-
-void printheader_64(FILE* f, Elf64_Ehdr header);
-
-Merge_table_progbits initmerge(FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2);
-
-Table_sections_64 get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2, Merge_table_progbits Mtable);
-
-void affiche_table_section(Table_sections_64 Tablesec);
 
 #endif
