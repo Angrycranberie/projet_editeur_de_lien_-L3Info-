@@ -1,5 +1,6 @@
+CC = gcc
 
-all : readelf_h readelf_S readelf_x readelf_sym readelf_r
+all : readelf_h readelf_S readelf_x readelf_s readelf_r
 
 readelf_h: entete.o readelf_h.o
 	${CC} -o readelf_h entete.o readelf_h.o
@@ -10,8 +11,8 @@ readelf_S: entete.o readelf_S.o tablesection.o
 readelf_x: entete.o readelf_x.o readsection.o
 	${CC} -o readelf_x readelf_x.o entete.o readsection.o
  
-readelf_sym: entete.o readelf_sym.o symboltable.o
-	${CC} -o readelf_sym readelf_sym.o entete.o symboltable.o
+readelf_s: entete.o readelf_s.o symboltable.o
+	${CC} -o readelf_s readelf_s.o entete.o symboltable.o
  
 readelf_r: entete.o readelf_r.o reloca.o
 	${CC} -o readelf_r readelf_r.o entete.o reloca.o
@@ -38,11 +39,22 @@ readelf_x.o: readelf_x.c entete.h readsection.h
 symboltable.o: symboltable.c symboltable.h
 	${CC} ${CFLAGS} -c symboltable.c
  
-readelf_sym.o: readelf_sym.c entete.h symboltable.h
-	${CC} ${CFLAGS} -c readelf_sym.c
+readelf_s.o: readelf_s.c entete.h symboltable.h
+	${CC} ${CFLAGS} -c readelf_s.c
  
 reloca.o: reloca.c reloca.h
 	${CC} ${CFLAGS} -c reloca.c
  
 readelf_r.o: readelf_r.c entete.h reloca.h
 	${CC} ${CFLAGS} -c readelf_r.c
+
+clean_exec:
+	rm *.o readelf_h readelf_S readelf_x readelf_s readelf_r
+
+clean_test:
+	rm Examples_loader/*.o
+	rm -r Resultat
+
+clean:
+	make clean_exec > /dev/null
+	make clean_test >/dev/null
