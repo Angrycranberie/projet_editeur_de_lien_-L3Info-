@@ -29,5 +29,7 @@ int is_big_endian();
 #define reverse_4(x) ((((x)&0xFF)<<24)|((((x)>>8)&0xFF)<<16)|\
 						((((x)>>16)&0xFF)<<8)|(((x)>>24)&0xFF))
 
+#define reverse_8(x) ((((x)&0xFF)<<56)|((((x)>>8)&0xFF)<<48)|((((x)>>16)&0xFF)<<40)|((((x)>>24)&0xFF)<<32)|((((x)>>32)&0xFF)<<24)|((((x)>>40)&0xFF)<<16)|((((x)>>48)&0xFF)<<8)|((((x)>>56)&0xFF)))
+
 #define min(x,y) ((x)<(y)?(x):(y))
 #endif

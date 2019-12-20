@@ -1,55 +1,57 @@
-CC = gcc
+CC=gcc
+CFLAGS=-Wall
+PROGS=readelf_header readelf_section_list readelf_section_content readelf_symbols_table readelf_relocation
+COMMON=debug.h debug.c util.h util.c
 
-all : readelf_h readelf_S readelf_x readelf_s readelf_r
+all : $(PROGS)
 
-readelf_h: entete.o readelf_h.o
-	${CC} -o readelf_h entete.o readelf_h.o
-  
-readelf_S: entete.o readelf_S.o tablesection.o
-	${CC} -o readelf_S readelf_S.o entete.o tablesection.o
- 
-readelf_x: entete.o readelf_x.o readsection.o
-	${CC} -o readelf_x readelf_x.o entete.o readsection.o
- 
-readelf_s: entete.o readelf_s.o symboltable.o
-	${CC} -o readelf_s readelf_s.o entete.o symboltable.o
- 
-readelf_r: entete.o readelf_r.o reloca.o
-	${CC} -o readelf_r readelf_r.o entete.o reloca.o
-  
-entete.o: entete.c entete.h
-	${CC} ${CFLAGS} -c entete.c
-  
-readelf_h.o: readelf_h.c entete.h
-	${CC} ${CFLAGS} -c readelf_h.c
-  
+readelf_header: header.o readelf_header.o
+	${CC} -o readelf_header header.o readelf_header.o
+
+readelf_section_list: header.o readelf_section_list.o tablesection.o
+	${CC} -o readelf_section_list readelf_section_list.o header.o tablesection.o
+
+readelf_section_content: header.o readelf_section_content.o readsection.o
+	${CC} -o readelf_section_content readelf_section_content.o header.o readsection.o
+
+readelf_symbols_table: header.o readelf_symbols_table.o symboltable.o
+	${CC} -o readelf_symbols_table readelf_symbols_table.o header.o symboltable.o
+
+readelf_relocation: header.o readelf_relocation.o reloca.o
+	${CC} -o readelf_relocation readelf_relocation.o header.o reloca.o
+
+header.o: $(COMMON) header.c header.h
+	${CC} ${CFLAGS} -c header.c
+
+readelf_header.o: readelf_header.c header.h
+	${CC} ${CFLAGS} -c readelf_header.c
+
 tablesection.o: tablesection.c tablesection.h
 	${CC} ${CFLAGS} -c tablesection.c
-  
-readelf_S.o: readelf_S.c entete.h tablesection.h
-	${CC} ${CFLAGS} -c readelf_S.c
-  
+
+readelf_section_list.o: readelf_section_list.c header.h tablesection.h
+	${CC} ${CFLAGS} -c readelf_section_list.c
+
 readsection.o: readsection.c readsection.h
 	${CC} ${CFLAGS} -c readsection.c
- 
-readelf_x.o: readelf_x.c entete.h readsection.h
-	${CC} ${CFLAGS} -c readelf_x.c
 
+readelf_section_content.o: readelf_section_content.c header.h readsection.h
+	${CC} ${CFLAGS} -c readelf_section_content.c
 
 symboltable.o: symboltable.c symboltable.h
 	${CC} ${CFLAGS} -c symboltable.c
- 
-readelf_s.o: readelf_s.c entete.h symboltable.h
-	${CC} ${CFLAGS} -c readelf_s.c
- 
+
+readelf_symbols_table.o: readelf_symbols_table.c header.h symboltable.h
+	${CC} ${CFLAGS} -c readelf_symbols_table.c
+
 reloca.o: reloca.c reloca.h
 	${CC} ${CFLAGS} -c reloca.c
- 
-readelf_r.o: readelf_r.c entete.h reloca.h
-	${CC} ${CFLAGS} -c readelf_r.c
+
+readelf_relocation.o: readelf_relocation.c header.h reloca.h
+	${CC} ${CFLAGS} -c readelf_relocation.c
 
 clean_exec:
-	rm *.o readelf_h readelf_S readelf_x readelf_s readelf_r
+	rm *.o $(PROGS)
 
 clean_test:
 	rm Examples_loader/*.o
