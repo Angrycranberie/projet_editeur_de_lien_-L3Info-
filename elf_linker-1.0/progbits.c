@@ -25,7 +25,7 @@ void getname_section_64(FILE* f, Elf64_Ehdr header, int id, char* nom){
 }
 
 // Initialise la table de Merge décrite dans progbits.h avec des -1
-Merge_table_progbits initmerge_64(FILE* f2, Elf64_Ehdr header1, Elf64_Ehdr header2){
+Merge_table_progbits initmerge_64(Elf64_Ehdr header2){
   Merge_table_progbits Mtable;
   Mtable.nbmerge = 0;
   for (int i = 0; i< header2.e_shnum;i++){
@@ -41,12 +41,12 @@ Merge_table_progbits search_progbits_f2_64(FILE* f1, FILE* f2, Elf64_Ehdr header
   int j;
   Elf64_Word type1;
   Elf64_Word type2;
-  char nom1[100];
-  char nom2[100];
+  char nom1[NOMMAX];
+  char nom2[NOMMAX];
   int test;
   
   // On crée la table 
-  Merge_table_progbits Mtable = initmerge_64(f2,header1,header2);
+  Merge_table_progbits Mtable = initmerge_64(header2);
   
   // On parcourt les sections du fichier 2
   for (i=0;i<header2.e_shnum;i=i+1){
@@ -125,12 +125,12 @@ Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, E
   Elf64_Word name;
   
   
-  // Structure permettant de stocker les informations utiles pour l'etape 6,  c'est a dire les progbits fusionnes et  
+  // Structure permettant de stocker les informations utiles pour l'etape 6
   Table_sections Tablesec;
   Tablesec.nbSections = 0;
   
   // On stocke Mtable (pour le retourner avec le reste) dans Tablesec
-  
+  Tablesec.Mtable = Mtable;
   
   //Stocke les offsets des entrees de la table de sections dans leurs fichiers respectifs
   Elf64_Off offset1;
@@ -142,7 +142,7 @@ Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, E
     fseek(f1, header1.e_shoff + i * header1.e_shentsize , SEEK_SET);
     fread(&name,sizeof(Elf64_Word),1,f1);
     fread(&type,sizeof(Elf64_Word),1,f1);
-    if (type == SHT_PROGBITS){
+    if (type == SHT_PROGBITS){ // On ne récupère que les sections PROGBITS
         // On saute les champs qui ne nous interessent pas
       fseek(f1, sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_CUR);
       fread(&offset1,sizeof(Elf64_Off),1,f1);
@@ -175,6 +175,7 @@ Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, E
         Tablesec.sections[Tablesec.nbSections].offset = size1; 
       }
       getname_section_64(f1, header1, i, Tablesec.sections[Tablesec.nbSections].name);
+      Tablesec.sections[Tablesec.nbSections].oldindexfich2 = -1;
       
       
       // On imprime maintenant le contenu des sections:
@@ -209,6 +210,7 @@ Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, E
       fseek(f2, header2.e_shoff + i * header2.e_shentsize , SEEK_SET);
       fread(&name,sizeof(Elf64_Word),1,f2);
       fread(&type,sizeof(Elf64_Word),1,f2);
+      // On ne la rajoute que si elle est du type PROGBITS
       if (type == SHT_PROGBITS){
         // On saute les champs qui ne nous interessent pas
         fseek(f2, sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_CUR);
@@ -220,6 +222,7 @@ Table_sections get_merged_progbits_64 (FILE* f1, FILE* f2, Elf64_Ehdr header1, E
         Tablesec.fusion[Tablesec.nbSections] = 0;
         Tablesec.sections[Tablesec.nbSections] = init_section_size(size2);
         getname_section_64(f2, header2, i, Tablesec.sections[Tablesec.nbSections].name);
+        Tablesec.sections[Tablesec.nbSections].oldindexfich2 = i;
         
         // On imprime maintenant le contenu de la section:
         // On commence par se placer correctement dans le fichier 2
@@ -305,7 +308,7 @@ void getname_section_32(FILE* f, Elf32_Ehdr header, int id, char* nom){
 }
 
 // Initialise la table de Merge décrite dans progbits.h avec des -1
-Merge_table_progbits initmerge_32(FILE* f2, Elf32_Ehdr header1, Elf32_Ehdr header2){
+Merge_table_progbits initmerge_32(Elf32_Ehdr header2){
   Merge_table_progbits Mtable;
   Mtable.nbmerge = 0;
   for (int i = 0; i< header2.e_shnum;i++){
@@ -326,7 +329,7 @@ Merge_table_progbits search_progbits_f2_32(FILE* f1, FILE* f2, Elf32_Ehdr header
   int test;
   
   // On crée la table 
-  Merge_table_progbits Mtable = initmerge_32(f2,header1,header2);
+  Merge_table_progbits Mtable = initmerge_32(header2);
   
   // On parcourt les sections du fichier 2
   for (i=0;i<header2.e_shnum;i=i+1){
@@ -399,6 +402,7 @@ Table_sections get_merged_progbits_32 (FILE* f1, FILE* f2, Elf32_Ehdr header1, E
   
   // On stocke Mtable (pour le retourner avec le reste) dans Tablesec
   
+  Tablesec.Mtable = Mtable;
   
   //Stocke les offsets des entrees de la table de sections dans leurs fichiers respectifs
   Elf32_Off offset1;
