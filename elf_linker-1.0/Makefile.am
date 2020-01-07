@@ -17,7 +17,7 @@ SUBDIRS=
 SUBDIRS+=. Examples_loader
 
 bin_PROGRAMS=
-bin_PROGRAMS+=ARM_runner_example
+# bin_PROGRAMS+=ARM_runner_example
 bin_PROGRAMS+=readelf_header
 bin_PROGRAMS+=readelf_section_list
 bin_PROGRAMS+=readelf_section_content
@@ -33,9 +33,9 @@ SYMBOLTABLE=symboltable.h symboltable.c
 RELOCA=reloca.h reloca.c
 
 EXTRA_DIST=filtre.pl
-SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
+# SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
 
-ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
+# ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
 readelf_header_SOURCES=$(COMMON) $(HEADER) readelf_header.c
 readelf_section_list_SOURCES=$(COMMON) $(TABLESECTION) readelf_section_list.c
 readelf_section_content_SOURCES=$(COMMON) $(READSECTION) readelf_section_content.c
