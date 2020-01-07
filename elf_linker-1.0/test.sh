@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# On vérifie le nombre d'argument
+if [ $# -eq 0 ]
+then
+	echo Erreur - Donnez en argument les options à tester
+fi
+
 #Creation des exemples
 cd Examples_loader/
 ./exemples.sh
@@ -13,36 +19,38 @@ then
 fi
 
 # On verifie l'existence des executables
-if [ ! -f readelf_h -o ! -f readelf_S -o ! -f readelf_x -o ! -f readelf_s -o ! -f readelf_r ]
+if [ ! -f readelf_header -o ! -f readelf_section_list -o ! -f readelf_symbols_table -o ! -f readelf_relocation ]
 then
 	make
 fi
 
-# Creation des resultats
 files=$(ls Examples_loader/resultat_*.o)
-mods=$(echo "h S s r")
 
-for i in $mods
+# Creation des resultats
+for i in $@
 do
-	mkdir Resultat/$i
+	if [ ! -d Resultat/$i ]
+	then
+		mkdir Resultat/$i
+	fi
 	for j in $files
 	do
 		name=$(basename $j .o)
 		arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out
-		if [ "$mods" = "h" ]
+		if [ "$i" = "h" ]
 		then
-			m=entete
-		elif [ "$mods" = "S" ]
+			m=header
+		elif [ "$i" = "S" ]
 		then
-			m=section
-		elif [ "$mods" = "s" ]
+			m=section_list
+		elif [ "$i" = "s" ]
 		then
-			s=symbole
-		elif [ "$mods" = "r" ]
+			m=symbols_table
+		elif [ "$i" = "r" ]
 		then
-			m=reimplant
+			m=relocation
 		fi
-			./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
+		./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
 	done
 done
 echo "Resultats disponibles"
