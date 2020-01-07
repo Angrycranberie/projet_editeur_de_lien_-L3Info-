@@ -1,8 +1,7 @@
 #ifndef _PROGBITS_H
 #define	_PROGBITS_H 1
 #include <elf.h>
-#define TMAX 100
-#define NOMMAX 100
+#include "values.h"
 
 // Structure permettant de se souvenir des sections que l'on doit merger. si id_section_merge[j] = i, cela veut dire que la section j du fichier 2 doit etre concatennee a la section i du fichier 1. si cela vaut -1, cela signifie 
 // qu'il ne faut pas la merge.

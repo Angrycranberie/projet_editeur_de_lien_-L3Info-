@@ -24,11 +24,16 @@ int main(int argc, char **argv)
   Elf64_Ehdr header = read_header(f);
   if (header.e_ident[EI_CLASS] == ELFCLASS32)
   {
-    search_reloca_tables_32(f, header);
+    symbol_table_64 symtable;
+    symtable = read_symbols_tables_64(f, header);
+    print_symbol_table_64(symtable);
+    
   }
   else if (header.e_ident[EI_CLASS] == ELFCLASS64)
   {
-    search_reloca_tables_64(f, header);
+    symbol_table_32 symtable;
+    symtable = read_symbols_tables_32(f, header);
+    print_symbol_table_32(symtable);
   }
   return 0;
 }
