@@ -3,6 +3,7 @@
 #include <elf.h>
 #include "progbits.h"
 #include "fusionsymbole.h"
+#include "symboltable.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -41,8 +42,8 @@ int main (int argc, char ** argv){
     header2 = Lecture32(f2,headid2);   
      
     // Cette partie pourra être remplacee lorsque le programme sera modularise (on recuperera les resultats de l'etape 4)
-    symtable1 = get_symbol_table_32(f1, header1);
-    symtable2 = get_symbol_table_32(f2, header2);
+    symtable1 = read_symbols_tables_32(f1, header1);
+    symtable2 = read_symbols_tables_32(f2, header2);
     
     
     //Resultats de l'etape 6
@@ -69,8 +70,8 @@ int main (int argc, char ** argv){
     header2 = Lecture64(f2,headid2);
     
     // Cette partie pourra être remplacee lorsque le programme sera modularise (on recuperera les resultats de l'etape 4)
-    symtable1 = get_symbol_table_64(f1, header1);
-    symtable2 = get_symbol_table_64(f2, header2);
+    symtable1 = read_symbols_tables_64(f1, header1);
+    symtable2 = read_symbols_tables_64(f2, header2);
     
     
     //Resultats de l'etape 6
