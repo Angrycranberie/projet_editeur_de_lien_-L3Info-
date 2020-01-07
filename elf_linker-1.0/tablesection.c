@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <elf.h>
 #include "tablesection.h"
-#include "entete.h"
+#include "header.h"
 
 void Tablesection64(FILE *f, Elf64_Ehdr header)
 {
