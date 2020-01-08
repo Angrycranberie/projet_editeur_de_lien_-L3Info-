@@ -11,10 +11,6 @@
 // seule la version 64 bits est vraiment utile
 symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list seclist){
   symbol_table_64 symtable;
-  Elf64_Word type;
-  Elf64_Xword totalsize;
-  Elf64_Xword entsize;
-  Elf64_Off offset;
   int nb;
   int i;
   // version 32(0) ou 64 bit(1) 
@@ -35,7 +31,7 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list
       
       // On recupere l'addresse de la table de chaine correspondante et la taille des entrees
       symtable.indexstring = seclist.sec_list[i].sh_link;
-      symtable.tailleentree = entsize;
+      symtable.tailleentree = seclist.sec_list[i].sh_entsize;
       
       // On stocke l'index
       symtable.indextable = i;
