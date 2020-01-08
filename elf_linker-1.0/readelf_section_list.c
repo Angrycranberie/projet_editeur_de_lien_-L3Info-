@@ -22,6 +22,6 @@ int main(int argc, char **argv)
   Elf64_Ehdr header = read_header(f);
   
   section_list *result = read_tablesection(f, header);
-  print_sectionTable(header,result);
+  print_sectionTable(result);
   return 0;
 }

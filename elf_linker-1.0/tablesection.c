@@ -14,6 +14,7 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 	section_list *sections = (section_list *)malloc(sizeof(section_list));
 	sections->sec_list = (Elf64_Shdr *)malloc(sizeof(Elf64_Shdr) * header.e_shnum);
 	sections->names = (section_name *)malloc(sizeof(section_name) * header.e_shnum);
+	sections->nb_section = header.e_shnum;
 
 	// version 32(0) ou 64 bit(1) 
     int bits_version = header.e_ident[4] == ELFCLASS64;
@@ -77,9 +78,8 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 }
 
 
-void print_sectionTable(Elf64_Ehdr header,section_list *sections){
-	for (int i = 0; i < header.e_shnum; i++){
-		printf("%lx\n", header.e_shoff + i * header.e_shentsize);
+void print_sectionTable(section_list *sections){
+	for (int i = 0; i < sections->nb_section; i++){
 
 		// On affiche les informations sur la section
 		printf("Numero de section:             %d\n", i);

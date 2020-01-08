@@ -9,10 +9,11 @@
 typedef struct sections{
     Elf64_Shdr *sec_list;
     section_name *names;
+    int nb_section;
 }section_list;
 
 section_list *read_tablesection(FILE* f, Elf64_Ehdr header);
 
-void print_sectionTable(Elf64_Ehdr header,section_list *sections);
+void print_sectionTable(section_list *sections);
 
 #endif
