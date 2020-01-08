@@ -31,8 +31,8 @@ typedef struct
 
 
 
-void print_rela_64 (rela_table_64 tablerela); // Affiche une table de rel
-void print_list_rela_64 (list_rela_table_64 list); // Affiche une liste de tables de rel
+void print_rela_64 (rela_table_64 tablerela, Elf64_Ehdr header); // Affiche une table de rel
+void print_list_rela_64 (list_rela_table_64 list, Elf64_Ehdr header); // Affiche une liste de tables de rel. Necessite le header pour savoir si on est en 32 ou 64 bits
 list_rela_table_64 search_reloca_tables_64(FILE* f, Elf64_Ehdr header, section_list seclist); // cherche toutes les tables de rel dans le fichier donné
 rela_table_64 read_rela_tables_64(int id, FILE* f, Elf64_Ehdr header, int addend, section_list seclist); // Récupère la table de rel à l'indice donnée, avec addend si addend vaut 1, sinon 0.
 
