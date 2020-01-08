@@ -14,19 +14,19 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 	section_list *sections = (section_list *)malloc(sizeof(section_list));
 	sections->sec_list = (Elf64_Shdr *)malloc(sizeof(Elf64_Shdr) * header.e_shnum);
 	sections->names = (section_name *)malloc(sizeof(section_name) * header.e_shnum);
+	sections->nb_section = header.e_shnum;
 
 	// version 32(0) ou 64 bit(1) 
     int bits_version = header.e_ident[4] == ELFCLASS64;
     // indique si l'endianess est différent entre la machine et le fichier 1 -> oui 0 -> non
     int diff_endianess = (is_big_endian() != (int)(header.e_ident[EI_DATA] == ELFDATA2MSB));
-	printf("diff_endianess %d\n",diff_endianess);
 
 	if (header.e_shoff == 0)
 		return NULL;
 
 	//On se place au début de la table des sections
 	//On fait une entrée pour chaque section
-	for (i = 0; i < header.e_shnum; i++){
+	for (i = 0; i < sections->nb_section; i++){
 		// Se place à l'emplacement du fichier donné par l'offset et le numero de la section dans
 		// la table.
 		fseek(f, header.e_shoff + i * header.e_shentsize, SEEK_SET);
@@ -34,19 +34,16 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 		
 
 		// On regarde le header de la section
-		sections->sec_list[i].sh_name = 0;
 		fread(&(sections->sec_list[i].sh_name), sizeof(Elf64_Word), 1, f);
-		sections->sec_list[i].sh_name =   reverse_4(sections->sec_list[i].sh_name);
-		printf("sh_name : %d\n",sections->sec_list[i].sh_name);
 		fread(&sections->sec_list[i].sh_type, sizeof(Elf64_Word), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_flags, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_flags, sizeof(Elf32_Word), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_addr, sizeof(Elf64_Addr), 1, f) : fread(&sections->sec_list[i].sh_addr, sizeof(Elf32_Addr), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_offset, sizeof(Elf64_Off), 1, f) : fread(&sections->sec_list[i].sh_offset, sizeof(Elf32_Off), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_size, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_size, sizeof(Elf32_Word), 1, f);
+		bits_version ? fread(&sections->sec_list[i].sh_flags, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_flags, sizeof(Elf32_Word), 1, f),sections->sec_list[i].sh_flags &= 0xFFFFFFFF;
+		bits_version ? fread(&sections->sec_list[i].sh_addr, sizeof(Elf64_Addr), 1, f) : fread(&sections->sec_list[i].sh_addr, sizeof(Elf32_Addr), 1, f),sections->sec_list[i].sh_addr &= 0xFFFFFFFF;
+		bits_version ? fread(&sections->sec_list[i].sh_offset, sizeof(Elf64_Off), 1, f) : fread(&sections->sec_list[i].sh_offset, sizeof(Elf32_Off), 1, f),sections->sec_list[i].sh_offset &= 0xFFFFFFFF;
+		bits_version ? fread(&sections->sec_list[i].sh_size, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_size, sizeof(Elf32_Word), 1, f),sections->sec_list[i].sh_size &= 0xFFFFFFFF;
 		fread(&sections->sec_list[i].sh_link, sizeof(Elf64_Word), 1, f);
 		fread(&sections->sec_list[i].sh_info, sizeof(Elf64_Word), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_addralign, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_addralign, sizeof(Elf32_Word), 1, f);
-		bits_version ? fread(&sections->sec_list[i].sh_entsize, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_entsize, sizeof(Elf32_Word), 1, f);
+		bits_version ? fread(&sections->sec_list[i].sh_addralign, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_addralign, sizeof(Elf32_Word), 1, f),sections->sec_list[i].sh_addralign &= 0xFFFFFFFF;
+		bits_version ? fread(&sections->sec_list[i].sh_entsize, sizeof(Elf64_Xword), 1, f) : fread(&sections->sec_list[i].sh_entsize, sizeof(Elf32_Word), 1, f),sections->sec_list[i].sh_entsize &= 0xFFFFFFFF;
 
 		if(diff_endianess){
 			sections->sec_list[i].sh_name =   reverse_4(sections->sec_list[i].sh_name);
@@ -63,15 +60,16 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 
 		// On regarde le nom de la section dans la table des chaînes
 		bits_version ? fseek(f, header.e_shoff + header.e_shstrndx * header.e_shentsize + 2 * sizeof(Elf64_Word) + sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_SET) : 
-		fseek(f, header.e_shoff + header.e_shstrndx * header.e_shentsize + 3 * sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_SET);
+		fseek(f, (Elf32_Off)header.e_shoff + header.e_shstrndx * header.e_shentsize + 3 * sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_SET);
 		bits_version ? fread(&offset, sizeof(Elf64_Off), 1, f) : fread(&offset, sizeof(Elf32_Off), 1, f);
-		fseek(f, offset + sections->sec_list[i].sh_name, SEEK_SET);
-		
+
+		fseek(f, (int)(offset + sections->sec_list[i].sh_name), SEEK_SET);
 		int j = 0;
-		fread(&sections->names[i].nom[j], sizeof(unsigned char), 1, f);
+
+		fread(&(sections->names[i].nom[j]), sizeof(unsigned char), 1, f);
 		while (sections->names[i].nom[j] != '\0'){
 			j++;
-			fread(&sections->names[i].nom[j], sizeof(unsigned char), 1, f);
+			fread(&(sections->names[i].nom[j]), sizeof(unsigned char), 1, f);
 		}
 
 		
@@ -80,9 +78,8 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 }
 
 
-void print_sectionTable(Elf64_Ehdr header,section_list *sections){
-	for (int i = 0; i < header.e_shnum; i++){
-		printf("%lx\n", header.e_shoff + i * header.e_shentsize);
+void print_sectionTable(section_list *sections){
+	for (int i = 0; i < sections->nb_section; i++){
 
 		// On affiche les informations sur la section
 		printf("Numero de section:             %d\n", i);
