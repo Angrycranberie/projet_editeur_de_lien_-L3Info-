@@ -52,13 +52,25 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list
         // On se place dans la table des symboles
         fseek(f, seclist.sec_list[i].sh_offset + j * seclist.sec_list[i].sh_entsize, SEEK_SET);
         
-        // On recupere une entree
-        fread(&symtable.entries[j].st_name, sizeof(Elf64_Word),1,f);
-        fread(&symtable.entries[j].st_info, sizeof(unsigned char),1,f);
-        fread(&symtable.entries[j].st_other, sizeof(unsigned char),1,f);
-        fread(&symtable.entries[j].st_shndx, sizeof(Elf64_Section),1,f);
-        bits_version ? fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f) : (fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f), symtable.entries[j].st_value &= 0xFFFFFFFF);
-        bits_version ? fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f) : (fread(&symtable.entries[j].st_size, sizeof(Elf32_Word),1,f), symtable.entries[j].st_size &= 0xFFFFFFFF);
+        // On recupere une entree (on separe le cas 32 et 64 bits)
+        // cas 64 bits
+        if (bits_version == 1){
+          fread(&symtable.entries[j].st_name, sizeof(Elf64_Word),1,f);
+          fread(&symtable.entries[j].st_info, sizeof(unsigned char),1,f);
+          fread(&symtable.entries[j].st_other, sizeof(unsigned char),1,f);
+          fread(&symtable.entries[j].st_shndx, sizeof(Elf64_Section),1,f);
+          fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f); 
+          fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f);
+        }
+        // cas 32 bits
+        else {
+          fread(&symtable.entries[j].st_name, sizeof(Elf64_Word),1,f);
+          fread(&symtable.entries[j].st_value, sizeof(Elf32_Addr),1,f); symtable.entries[j].st_value &= 0xFFFFFFFF;
+          fread(&symtable.entries[j].st_size, sizeof(Elf32_Word),1,f); symtable.entries[j].st_size &= 0xFFFFFFFF;
+          fread(&symtable.entries[j].st_info, sizeof(unsigned char),1,f);
+          fread(&symtable.entries[j].st_other, sizeof(unsigned char),1,f);
+          fread(&symtable.entries[j].st_shndx, sizeof(Elf64_Section),1,f);
+        }
         
         // On corrige son endianess
         if(diff_endianess){
