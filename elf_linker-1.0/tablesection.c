@@ -79,7 +79,8 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 
 
 void print_sectionTable(section_list *sections){
-	for (int i = 0; i < sections->nb_section; i++){
+	int i;
+	for (i = 0; i < sections->nb_section; i++){
 
 		// On affiche les informations sur la section
 		printf("Numero de section:             %d\n", i);

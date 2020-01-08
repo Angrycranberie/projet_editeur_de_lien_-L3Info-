@@ -3,9 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include "symboltable.h"
+#include "tablesection.h"
 #include "values.h"
+#include "util.h"
 
-symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header){
+
+// seule la version 64 bits est vraiment utile
+symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list seclist){
   symbol_table_64 symtable;
   Elf64_Word type;
   Elf64_Xword totalsize;
@@ -13,37 +17,31 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header){
   Elf64_Off offset;
   int nb;
   int i;
+  // version 32(0) ou 64 bit(1) 
+  int bits_version;
+  // indique si l'endianess est différent entre la machine et le fichier 1 -> oui 0 -> non
+  int diff_endianess;
+  bits_version = header.e_ident[EI_CLASS] == ELFCLASS64;
+  diff_endianess = (is_big_endian() != (int)(header.e_ident[EI_DATA] == ELFDATA2MSB));
   
-  // Verifie si on  a trouve la table des symboles
+  // Verifie si on a trouve la table des symboles
   int test = 0;
-  for (i=0;i<header.e_shnum && test == 0;i=i+1){
-    fseek(f, header.e_shoff + i * header.e_shentsize + sizeof(Elf64_Word), SEEK_SET);
+  for (i=0;i<seclist.nb_section && test == 0;i=i+1){
     
     // On verifie si on a bien une table de symboles
-    fread(&type, sizeof(Elf64_Word),1,f);
-    if (type==SHT_SYMTAB){
+    if (seclist.sec_list[i].sh_type==SHT_SYMTAB){
       // On indique qu'on a trouve la table des symboles
       test = 1;
-      // On saute des valeurs sans importance
-      fseek(f, sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_CUR);
       
-      // On recupere l'offset, la taille totale de la section et l'addresse de la table de chaine correspondante
-      fread(&offset, sizeof(Elf64_Off),1,f);
-      fread(&totalsize, sizeof(Elf64_Xword),1,f);
-      fread(&symtable.indexstring, sizeof(Elf64_Word),1,f);
-      
-      // On saute des valeurs sans importance
-      fseek(f, sizeof(Elf64_Word)  + sizeof(Elf64_Xword), SEEK_CUR);
-      
-      // On recupere la taille d'une entree de la section
-      fread(&entsize, sizeof(Elf64_Xword),1,f);
+      // On recupere l'addresse de la table de chaine correspondante et la taille des entrees
+      symtable.indexstring = seclist.sec_list[i].sh_link;
       symtable.tailleentree = entsize;
       
       // On stocke l'index
       symtable.indextable = i;
       
-      // Calcul du nobre d'entrees dans la table
-      nb = totalsize/entsize;
+      // Calcul du nombre d'entrees dans la table
+      nb = seclist.sec_list[i].sh_size/seclist.sec_list[i].sh_entsize;
       symtable.nbsymbols = nb;
       
       // On alloue la place necessaire 
@@ -52,35 +50,45 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header){
       // On recupere toutes les entrees de la table des symboles
       for(int j=0; j < nb; j++){
         // On se place dans la table des symboles
-        fseek(f, offset + j * entsize, SEEK_SET);
+        fseek(f, seclist.sec_list[i].sh_offset + j * seclist.sec_list[i].sh_entsize, SEEK_SET);
         
         // On recupere une entree
         fread(&symtable.entries[j].st_name, sizeof(Elf64_Word),1,f);
         fread(&symtable.entries[j].st_info, sizeof(unsigned char),1,f);
         fread(&symtable.entries[j].st_other, sizeof(unsigned char),1,f);
         fread(&symtable.entries[j].st_shndx, sizeof(Elf64_Section),1,f);
-        fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f);
-        fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f);
+        bits_version ? fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f) : fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f), symtable.entries[j].st_value &= 0xFFFFFFFF;
+        bits_version ? fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f) : fread(&symtable.entries[j].st_size, sizeof(Elf32_Word),1,f), symtable.entries[j].st_size &= 0xFFFFFFFF;
+        
+        // On corrige son endianess
+        if(diff_endianess){
+        symtable.entries[j].st_name = reverse_4(symtable.entries[j].st_name);
+        symtable.entries[j].st_shndx = reverse_2(symtable.entries[j].st_shndx);
+        symtable.entries[j].st_value = bits_version ?  reverse_8(symtable.entries[j].st_value) :  reverse_4(symtable.entries[j].st_value) ;
+        symtable.entries[j].st_size = bits_version ?  reverse_8(symtable.entries[j].st_size) :   reverse_4(symtable.entries[j].st_size) ;
+        }
+        
       }
     }
     
   }
   // Ici, on a trouve la table des symboles (normalement), on recupere maintenant la table de chaine associee
   
-  // On se place pour recuperer son offset et sa taille
-  fseek(f, header.e_shoff + symtable.indexstring * header.e_shentsize + sizeof(Elf64_Word) * 2 + sizeof(Elf64_Xword) + sizeof(Elf64_Addr) , SEEK_SET);
-  fread(&offset, sizeof(Elf64_Off),1,f);
-  fread(&totalsize, sizeof(Elf64_Xword),1,f);
-  symtable.stringtable.endoftable = totalsize;
+  
+  
+  
+
+  // On recupere la taille totale
+  symtable.stringtable.endoftable = seclist.sec_list[symtable.indexstring].sh_size;
   
   // On alloue la place necessaire 
-  symtable.stringtable.strings = malloc(totalsize);
+  symtable.stringtable.strings = malloc(seclist.sec_list[symtable.indexstring].sh_size);
   
   // On se place dans la table de chaines
-  fseek(f, offset, SEEK_SET);
+  fseek(f, seclist.sec_list[symtable.indexstring].sh_offset, SEEK_SET);
       
   // On recupere les valeurs
-  fread(symtable.stringtable.strings, totalsize,1,f);
+  fread(symtable.stringtable.strings, seclist.sec_list[symtable.indexstring].sh_size,1,f);
   
   // On renvoie la table, qui est completee
   return symtable;
