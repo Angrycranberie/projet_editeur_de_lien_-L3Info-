@@ -103,10 +103,14 @@ list_rela_table_64 search_reloca_tables_64(FILE* f, Elf64_Ehdr header, section_l
   return listrela;
 }
 
-void print_rela_64 (rela_table_64 tablerela){
+void print_rela_64 (rela_table_64 tablerela, Elf64_Ehdr header){
   uint32_t type;
   uint32_t sym;
   int i;
+  
+    // On a ajoute le header a cette fonction pour connaitre cette information
+  int bits_version = header.e_ident[EI_CLASS] == ELFCLASS64;
+  
  // On affiche le nom et le nombre d'entrees de la table
   printf("Relocation section \'%s\' contains %d entries:\n",tablerela.name, tablerela.nbentries);
   
@@ -117,17 +121,17 @@ void print_rela_64 (rela_table_64 tablerela){
   for (i=0;i<tablerela.nbentries;i++){
     
     // Afficher l'offset
-    printf("%012x  ",tablerela.entries[i].r_offset);
+    bits_version ? printf("%012lx  ",tablerela.entries[i].r_offset) : printf("%012x  ",tablerela.entries[i].r_offset);
     
     // Afficher info
-    printf("%012lx ",tablerela.entries[i].r_info);
+    bits_version ? printf("%012lx ",tablerela.entries[i].r_info) : printf("%012x ",tablerela.entries[i].r_info);
     
     // Afficher le type: Attention, on ne va donner ici que le numero lu, car les methodes s'ensuivant varient selon le processeur
-    type = ELF64_R_TYPE(tablerela.entries[i].r_info);
+    type = bits_version ? ELF64_R_TYPE(tablerela.entries[i].r_info) : ELF32_R_TYPE(tablerela.entries[i].r_info);
     printf("%5d            ",type); 
     
     //Afficher l'index du symbole
-    sym = ELF64_R_SYM(tablerela.entries[i].r_info);
+    sym = bits_version ? ELF64_R_SYM(tablerela.entries[i].r_info) : ELF32_R_SYM(tablerela.entries[i].r_info);
     printf("%5d            ",sym); 
     
     // Afficher la table des symboles concernée
@@ -140,10 +144,10 @@ void print_rela_64 (rela_table_64 tablerela){
   printf("\n\n");
 }
 
-void print_list_rela_64 (list_rela_table_64 list){
+void print_list_rela_64 (list_rela_table_64 list, Elf64_Ehdr header){
   int i;
   for (i=0;i<list.nbtables;i++){
-    print_rela_64(list.list[i]);
+    print_rela_64(list.list[i], header);
   }
 
 }
