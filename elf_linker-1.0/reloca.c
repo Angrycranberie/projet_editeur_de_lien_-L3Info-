@@ -66,9 +66,9 @@ rela_table_64 read_rela_tables_64(int id, FILE* f, Elf64_Ehdr header, int addend
     
     // On corrige l'endianess
     if(diff_endianess){
-        tablerela.entries[i].r_offset = bits_version ? reverse_8(tablerela.entries[i].r_offset) : reverse_4(tablerela.entries[i].r_offset);
-        tablerela.entries[i].r_info = bits_version ? reverse_8(tablerela.entries[i].r_info) : reverse_4(tablerela.entries[i].r_info);
-        tablerela.entries[i].r_addend = bits_version ? reverse_8(tablerela.entries[i].r_addend) : reverse_4(tablerela.entries[i].r_addend);
+        tablerela.entries[i].r_offset = reverse_8(tablerela.entries[i].r_offset);
+        tablerela.entries[i].r_info = reverse_8(tablerela.entries[i].r_info);
+        tablerela.entries[i].r_addend = reverse_8(tablerela.entries[i].r_addend);
     }
   
   }
