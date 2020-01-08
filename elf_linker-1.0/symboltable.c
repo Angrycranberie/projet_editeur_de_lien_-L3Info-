@@ -76,8 +76,8 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list
         if(diff_endianess){
         symtable.entries[j].st_name = reverse_4(symtable.entries[j].st_name);
         symtable.entries[j].st_shndx = reverse_2(symtable.entries[j].st_shndx);
-        symtable.entries[j].st_value = bits_version ?  reverse_8(symtable.entries[j].st_value) :  reverse_4(symtable.entries[j].st_value) ;
-        symtable.entries[j].st_size = bits_version ?  reverse_8(symtable.entries[j].st_size) :   reverse_4(symtable.entries[j].st_size) ;
+        symtable.entries[j].st_value = reverse_8(symtable.entries[j].st_value) ;
+        symtable.entries[j].st_size = reverse_8(symtable.entries[j].st_size) ;
         }
         
       }
