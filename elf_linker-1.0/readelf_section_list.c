@@ -19,16 +19,9 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  // ATTENTION : pas fonctionnel pour le moment
-  // En attente de modularisation
   Elf64_Ehdr header = read_header(f);
-  if (header.e_ident[EI_CLASS] == ELFCLASS32)
-  {
-    Tablesection32(f, header);
-  }
-  else if (header.e_ident[EI_CLASS] == ELFCLASS64)
-  {
-    Tablesection64(f, header);
-  }
+  
+  section_list *result = read_tablesection(f, header);
+  print_sectionTable(result);
   return 0;
 }

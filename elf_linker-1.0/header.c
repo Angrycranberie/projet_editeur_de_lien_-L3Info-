@@ -45,7 +45,6 @@ Elf64_Ehdr read_header(FILE* f){
     bits_version = header.e_ident[EI_CLASS] == ELFCLASS64;
     
     diff_endianess = (is_big_endian() != (int)(header.e_ident[EI_DATA] == ELFDATA2MSB));
-    printf("\n\n diff : %d  machine big ? %d, fichier big ? %d\n\n",diff_endianess,is_big_endian(),header.e_ident[EI_DATA] == ELFDATA2MSB);
     
     // Lit le type du fichier elf
     fread(&(header.e_type), sizeof(Elf64_Half), 1, f);
@@ -57,13 +56,13 @@ Elf64_Ehdr read_header(FILE* f){
     fread(&(header.e_version), sizeof(Elf64_Word), 1, f);
 
     // Lit l'addresse de départ
-    bits_version ? fread(&(header.e_entry), sizeof(Elf64_Addr), 1, f) : fread(&(header.e_entry), sizeof(Elf32_Addr), 1, f);
+    bits_version ? fread(&(header.e_entry), sizeof(Elf64_Addr), 1, f) : fread(&(header.e_entry), sizeof(Elf32_Addr), 1, f),header.e_entry &= 0xFFFFFFFF;
 
     // Lit l'offset permettant d'arriver sur les headers du programme
-    bits_version ? fread(&(header.e_phoff), sizeof(Elf64_Off), 1, f) : fread(&(header.e_phoff), sizeof(Elf32_Off), 1, f);
+    bits_version ? fread(&(header.e_phoff), sizeof(Elf64_Off), 1, f) : fread(&(header.e_phoff), sizeof(Elf32_Off), 1, f),header.e_phoff &= 0xFFFFFFFF;
 
     // Lit l'offset permettant d'arriver sur les headers des sections
-    bits_version ? fread(&(header.e_shoff), sizeof(Elf64_Off), 1, f) : fread(&(header.e_shoff), sizeof(Elf32_Off), 1, f);
+    bits_version ? fread(&(header.e_shoff), sizeof(Elf64_Off), 1, f) : fread(&(header.e_shoff), sizeof(Elf32_Off), 1, f),header.e_shoff &= 0xFFFFFFFF;
 
     // Lit les flags, n'affiche que la valeur en hexadecimal, comme readelf.
     fread(&(header.e_flags), sizeof(Elf64_Word), 1, f);
