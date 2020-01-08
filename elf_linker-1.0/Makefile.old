@@ -1,0 +1,54 @@
+CC=gcc
+CFLAGS=-Wall
+PROGS=readelf_header readelf_section_list readelf_section_content readelf_symbols_table readelf_relocation
+COMMON=debug.h util.h
+
+
+all : $(PROGS)
+
+
+readelf_header: header.o readelf_header.o util.o
+	${CC} -o $@ $^
+
+readelf_section_list: header.o readelf_section_list.o tablesection.o
+	${CC} -o $@ $^
+
+readelf_section_content: header.o readelf_section_content.o readsection.o
+	${CC} -o $@ $^
+
+readelf_symbols_table: header.o readelf_symbols_table.o symboltable.o
+	${CC} -o $@ $^
+
+readelf_relocation: header.o readelf_relocation.o reloca.o
+	${CC} -o $@ $^
+
+
+header.o: header.c header.h $(COMMON)
+readelf_header.o: readelf_header.c header.h
+
+tablesection.o: tablesection.c tablesection.h
+readelf_section_list.o: readelf_section_list.c header.h tablesection.h
+
+readsection.o: readsection.c readsection.h
+readelf_section_content.o: readelf_section_content.c header.h readsection.h
+
+symboltable.o: symboltable.c symboltable.h
+readelf_symbols_table.o: readelf_symbols_table.c header.h symboltable.h
+
+reloca.o: reloca.c reloca.h
+readelf_relocation.o: readelf_relocation.c header.h reloca.h
+
+%.o:%.c
+	${CC} ${CFLAGS} -c $<
+
+
+clean_exec:
+	rm *.o $(PROGS)
+
+clean_test:
+	rm Examples_loader/*.o
+	rm -r Resultat
+
+clean:
+	make clean_test >/dev/null
+	make clean_exec >/dev/null

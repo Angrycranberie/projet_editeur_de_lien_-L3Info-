@@ -1,13 +1,10 @@
 #ifndef _READSECTION_H
 #define _READSECTION_H 1
 #include <elf.h>
+#include "tablesection.h"
 
-void readsection_id_64(int id, FILE *f, Elf64_Ehdr header);
+void readsection_id(int id, FILE *f, section_list *sections);
 
-void readsection_name_64(char *name, FILE *f, Elf64_Ehdr header);
-
-void readsection_id_32(int id, FILE *f, Elf32_Ehdr header);
-
-void readsection_name_32(char *name, FILE *f, Elf32_Ehdr header);
+void readsection_name(char *name, FILE *f,section_list *sections);
 
 #endif
