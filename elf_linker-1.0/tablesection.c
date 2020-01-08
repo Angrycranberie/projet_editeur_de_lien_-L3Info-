@@ -20,14 +20,13 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
     int bits_version = header.e_ident[4] == ELFCLASS64;
     // indique si l'endianess est différent entre la machine et le fichier 1 -> oui 0 -> non
     int diff_endianess = (is_big_endian() != (int)(header.e_ident[EI_DATA] == ELFDATA2MSB));
-	printf("diff_endianess %d\n",diff_endianess);
 
 	if (header.e_shoff == 0)
 		return NULL;
 
 	//On se place au début de la table des sections
 	//On fait une entrée pour chaque section
-	for (i = 0; i < header.e_shnum; i++){
+	for (i = 0; i < sections->nb_section; i++){
 		// Se place à l'emplacement du fichier donné par l'offset et le numero de la section dans
 		// la table.
 		fseek(f, header.e_shoff + i * header.e_shentsize, SEEK_SET);
@@ -63,13 +62,14 @@ section_list *read_tablesection(FILE *f, Elf64_Ehdr header)
 		bits_version ? fseek(f, header.e_shoff + header.e_shstrndx * header.e_shentsize + 2 * sizeof(Elf64_Word) + sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_SET) : 
 		fseek(f, (Elf32_Off)header.e_shoff + header.e_shstrndx * header.e_shentsize + 3 * sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_SET);
 		bits_version ? fread(&offset, sizeof(Elf64_Off), 1, f) : fread(&offset, sizeof(Elf32_Off), 1, f);
-		fseek(f, offset + sections->sec_list[i].sh_name, SEEK_SET);
-		
+
+		fseek(f, (int)(offset + sections->sec_list[i].sh_name), SEEK_SET);
 		int j = 0;
-		fread(&sections->names[i].nom[j], sizeof(unsigned char), 1, f);
+
+		fread(&(sections->names[i].nom[j]), sizeof(unsigned char), 1, f);
 		while (sections->names[i].nom[j] != '\0'){
 			j++;
-			fread(&sections->names[i].nom[j], sizeof(unsigned char), 1, f);
+			fread(&(sections->names[i].nom[j]), sizeof(unsigned char), 1, f);
 		}
 
 		
