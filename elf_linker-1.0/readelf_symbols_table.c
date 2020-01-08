@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <elf.h>
 #include "header.h"
+#include "tablesection.h"
 #include "symboltable.h"
 
 // Donne les informations sur les sections du fichier ELF passé en argument
@@ -19,16 +20,9 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  // ATTENTION : pas fonctionnel pour le moment
-  // En attente de modularisation
   Elf64_Ehdr header = read_header(f);
-  if (header.e_ident[EI_CLASS] == ELFCLASS32)
-  {
-    search_symbols_tables_32(f, header);
-  }
-  else if (header.e_ident[EI_CLASS] == ELFCLASS64)
-  {
-    search_symbols_tables_64(f, header);
-  }
+  section_list seclist = *read_tablesection(f,header);
+  symbol_table_64 symtable = read_symbols_tables_64(f, header, seclist);
+  print_symbol_table_64 (symtable);
   return 0;
 }
