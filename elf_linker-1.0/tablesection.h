@@ -12,6 +12,10 @@ typedef struct sections{
     int nb_section;
 }section_list;
 
+typedef struct name{
+	char nom[100];
+}section_name;
+
 section_list *read_tablesection(FILE* f, Elf64_Ehdr header);
 
 void print_sectionTable(section_list *sections);
