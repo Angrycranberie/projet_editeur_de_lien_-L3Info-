@@ -1,56 +1,58 @@
 #!/bin/bash
 
 # On vérifie le nombre d'argument
-if [ $# -eq 0 ]
+if [ $# -gt 0 ]
 then
-	echo Erreur - Donnez en argument les options à tester
-fi
 
-#Creation des exemples
-cd Examples_loader/
-./exemples.sh
-cd ..
-echo "Exemples crees"
+	# Creation des exemples
+	cd Examples_loader
+	./exemples.sh >/dev/null
+	cd ..
+	echo Exemples crees
+	
+	
+	# Creation des executables
+	autoreconf
+	./configure >/dev/null
+	make >/dev/null
+	echo Executables crees
 
-# Creation du repertoire recevant les resultats des tests
-if [ ! -d Resultat ]
-then
-	mkdir Resultat
-fi
-
-# On verifie l'existence des executables
-if [ ! -f readelf_header -o ! -f readelf_section_list -o ! -f readelf_symbols_table -o ! -f readelf_relocation ]
-then
-	make
-fi
-
-files=$(ls Examples_loader/resultat_*.o)
-
-# Creation des resultats
-for i in $@
-do
-	if [ ! -d Resultat/$i ]
+	# Creation du repertoire recevant les resultats des tests
+	if [ ! -d Resultat ]
 	then
-		mkdir Resultat/$i
+		mkdir Resultat
 	fi
-	for j in $files
+
+	files=$(ls Examples_loader/*.o)
+
+	# Creation des resultats
+	for i in $@
 	do
-		name=$(basename $j .o)
-		arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out
-		if [ "$i" = "h" ]
+		if [ ! -d Resultat/$i ]
 		then
-			m=header
-		elif [ "$i" = "S" ]
-		then
-			m=section_list
-		elif [ "$i" = "s" ]
-		then
-			m=symbols_table
-		elif [ "$i" = "r" ]
-		then
-			m=relocation
+			mkdir Resultat/$i
 		fi
-		./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
+		for j in $files
+		do
+			name=$(basename $j .o)
+			arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out
+			if [ "$i" = "h" ]
+			then
+				m=header
+			elif [ "$i" = "S" ]
+			then
+				m=section_list
+			elif [ "$i" = "s" ]
+			then
+				m=symbols_table
+			elif [ "$i" = "r" ]
+			then
+				m=relocation
+			fi
+			./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
+		done
 	done
-done
-echo "Resultats disponibles"
+	echo "Resultats disponibles"
+else
+	echo Erreur - Veuillez donner les options à tester en argument
+fi
