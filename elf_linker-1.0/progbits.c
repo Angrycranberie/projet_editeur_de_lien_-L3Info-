@@ -3,112 +3,80 @@
 #include <string.h>
 #include <stdlib.h>
 #include "progbits.h"
-
-
-/*********************************/
-/* Version 64 bits des fonctions */
-/*********************************/
-
-/* Fonction donnant le nom de section numero id dans le fichier ELF et place sa valeur dans nom.
-On assume que suffisamment de place y est allouée. Attention : cela change la position du descripteur f ! */
-void getname_section_64(FILE *f, Elf64_Ehdr header, int id, char *nom)
-{
-  Elf64_Off offset;
-  Elf64_Word sh_name;
-  // On récupère l'index du nom de la section.
-  fseek(f, header.e_shoff + id * header.e_shentsize, SEEK_SET);
-  fread(&sh_name, sizeof(Elf64_Word), 1, f);
-  // On récupère le nom de la section.
-  fseek(f, header.e_shoff + header.e_shstrndx * header.e_shentsize + 2 * sizeof(Elf64_Word) + sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_SET);
-  fread(&offset, sizeof(Elf64_Off), 1, f);
-  fseek(f, offset + sh_name, SEEK_SET);
-  int j = 0;
-  fread(&nom[j], sizeof(unsigned char), 1, f);
-  while (nom[j] != '\0')
-  {
-    j++;
-    fread(&nom[j], sizeof(unsigned char), 1, f);
-  }
-}
+#include "tablesection.h"
 
 // Fonction d'initialisation de la table des fusions (décrite dans 'progbits.h') avec des -1.
-Merge_table_progbits initmerge_64(Elf64_Ehdr header2)
+Merge_table_progbits initmerge(section_list *sections)
 {
   Merge_table_progbits Mtable;
   Mtable.nbmerge = 0;
-  for (int i = 0; i < header2.e_shnum; i++) { Mtable.id_section_merge[i] = -1; }
+  for (int i = 0; i < sections->nb_section; i++) { Mtable.id_section_merge[i] = -1; }
   return Mtable;
+}
+
+// cherche une section qui porte le nom donné en argument et etant de type progbits
+int search_section_name_progbits(char *nom,section_list *sections){
+    int i;
+    int id = -1;
+    for(i =0 ; i < sections->nb_section ; i++){
+        if(strcmp(sections->names[i].nom,nom) == 0 && sections->sec_list[i].sh_type == SHT_PROGBITS){
+            id = i;
+        }
+    }
+    return id;
 }
 
 /* Fonction de recherche des sections progbits dans le fichier 2.
 On regarde ensuite si il existe une section de même nom dans le fichier 1.
 Renvoie le nombre de fusions effectuées, et desquelles il s'agit. */
-Merge_table_progbits search_progbits_f2_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, Elf64_Ehdr header2)
-{
-  int i;
-  int j;
-  Elf64_Word type1;
-  Elf64_Word type2;
-  char nom1[NOMMAX];
-  char nom2[NOMMAX];
-  int test;
+Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *sections2){
+    int i;
+    int j;
+    Elf64_Word type2;
+    char nom1[NOMMAX];
+    char nom2[NOMMAX];
+    int id;
 
-  // On crée la table.
-  Merge_table_progbits Mtable = initmerge_64(header2);
+    // On crée la table.
+    Merge_table_progbits Mtable = initmerge(sections2);
 
-  // On parcourt les sections du fichier 2.
-  for (i = 0; i < header2.e_shnum; i = i + 1)
-  {
-    // On verifie si la section actuelle du fichier 2 est de type progbits.
-    fseek(f2, header2.e_shoff + i * header2.e_shentsize + sizeof(Elf64_Word), SEEK_SET);
-    fread(&type2, sizeof(Elf64_Word), 1, f2);
+    // On parcourt les sections du fichier 2.
+    for (i = 0 ; i < sections2->nb_section ; i = i + 1){
 
-    // Si la section actuelle du fichier 2 est de type progbits, on cherche son nom.
-    if (type2 == SHT_PROGBITS)
-    {
-      getname_section_64(f2, header2, i, nom2);
-      printf("On trouve la section %s dans le fichier 2 qui est de type progbits\n", nom2);
-      /* On regarde alors si son nom correspond à une section du fichier 1 de type progbits en parcourant les sections du fichier 1.
-      'test' verifie si on a trouvé une section de même nom. */
-      test = 0;
-      for (j = 0; j < header1.e_shnum && test == 0; j = j + 1)
-      {
+        // On verifie si la section actuelle du fichier 2 est de type progbits.
+        type2 = sections2->sec_list[i].sh_type;
 
-        // On verifie si la section actuelle du fichier 1 est de type progbits.
-        fseek(f1, header1.e_shoff + j * header1.e_shentsize + sizeof(Elf64_Word), SEEK_SET);
-        fread(&type1, sizeof(Elf64_Word), 1, f1);
-        // Si la section actuelle du fichier 1 est de type progbits, on cherche son nom.
-        if (type1 == SHT_PROGBITS)
-        {
-          getname_section_64(f1, header1, j, nom1);
+        // Si la section actuelle du fichier 2 est de type progbits, on cherche son nom.
+        if (type2 == SHT_PROGBITS){
 
-          // Si son nom est le même que celui de la section actuelle du fichier2, on doit les fusionner.
-          if (strcmp(nom1, nom2) == 0)
-          {
-            printf("Il faut merge les sections %s dans le numero %d\n", nom1, j);
-            Mtable.id_section_merge[i] = j;
-            Mtable.nbmerge++;
-            test = 1;
-          }
+            strcpy(nom2,sections2->names[i].nom);
+            printf("On trouve la section %s dans le fichier 2 qui est de type progbits\n", nom2);
+
+            /* On regarde alors si son nom correspond à une section du fichier 1 de type progbits en parcourant les sections du fichier 1.
+            'test' verifie si on a trouvé une section de même nom. */
+            id = search_section_name_progbits((char *)nom2 , sections1);
+
+            if (id == -1)
+                printf("Il faut ajouter la section %s dans le numero %d\n", nom2, sections1->nb_section + i - Mtable.nbmerge);
+            else{
+                Mtable.id_section_merge[i] = id;
+                Mtable.nbmerge++;
+                strcpy(nom1,sections2->names[i].nom);
+                printf("Il faut merge les sections %s dans le numero %d\n", nom1, id);
+            }
         }
-      }
-      if (test == 0)
-        printf("Il faut ajouter la section %s dans le numero %d\n", nom2, header1.e_shnum + i - Mtable.nbmerge);
     }
-  }
-  return Mtable;
+    return Mtable;
 }
 
 /* Fonction vérifiant si une fusion (de progbits) est à faire sur cette section.
 Retourne le numero avec lequel fusionner si il y a une fusion, -1 sinon. */
-int verif_fusion_progbits_64(int id, Merge_table_progbits Mtable, Elf64_Ehdr header)
-{
-  for (int i = 0; i < header.e_shnum; i++)
-  {
-    if (Mtable.id_section_merge[i] == id)
-      return i;
-  }
-  return -1;
+int verif_fusion_progbits(int id, Merge_table_progbits Mtable, section_list *sections){
+    for (int i = 0; i < sections->nb_section; i++){
+        if (Mtable.id_section_merge[i] == id)
+            return i;
+    }
+    return -1;
 }
 
 /* Fonction initialisant la section en allouant la bonne taille (pour pouvoir y ranger toutes les donnees). */
@@ -124,7 +92,7 @@ Section_progbits init_section_size(int taille)
 }
 
 // Effectue la fusion des sections PROGBITS des deux fichiers
-Table_sections get_merged_progbits_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, Elf64_Ehdr header2, Merge_table_progbits Mtable)
+Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, section_list *sections2, Merge_table_progbits Mtable)
 {
   int i;
   int verif;
@@ -147,31 +115,28 @@ Table_sections get_merged_progbits_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, El
   Elf64_Off offset2;
 
   // On commence par les progbits du fichier 1, on saute donc le 0 qui n'en est jamais 1.
-  for (i = 1; i < header1.e_shnum; i++)
+  for (i = 1; i < sections1->nb_section; i++)
   {
     // On recupere le nom de la section.
-    fseek(f1, header1.e_shoff + i * header1.e_shentsize, SEEK_SET);
-    fread(&name, sizeof(Elf64_Word), 1, f1);
-    fread(&type, sizeof(Elf64_Word), 1, f1);
+    strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
+    type = sections1->sec_list[i].sh_type;
+
     if (type == SHT_PROGBITS)
     {
       // On ne récupère que les sections PROGBITS. On saute les champs qui ne nous interessent pas.
-      fseek(f1, sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_CUR);
-      fread(&offset1, sizeof(Elf64_Off), 1, f1);
-      fread(&size1, sizeof(Elf64_Xword), 1, f1);
+      offset1 = sections1->sec_list[i].sh_offset;
+      size1 = sections1->sec_list[i].sh_size;
 
       // On vérifie si on a une fusion à faire.
-      verif = verif_fusion_progbits_64(i, Mtable, header2);
+      verif = verif_fusion_progbits(i, Mtable, sections2);
       // Cas de la fusion
       if (verif != -1)
       {
         Tablesec.fusion[Tablesec.nbSections] = 1;
-        // On se déplace dans le fichier 2 pour recuperer la taille de la section correspondante.
-        fseek(f2, header2.e_shoff + verif * header2.e_shentsize + sizeof(Elf64_Addr) + sizeof(Elf64_Xword) + sizeof(Elf64_Word) * 2, SEEK_SET);
-
+        
         // On lit le size pour le rajouter (l'offset est gardé pour plus tard, voir l'impression du contenu).
-        fread(&offset2, sizeof(Elf64_Off), 1, f2);
-        fread(&size2, sizeof(Elf64_Xword), 1, f2);
+        offset2 = sections2->sec_list[verif].sh_offset;
+        size2 = sections2->sec_list[verif].sh_size;
       }
       // On note sinon l'absence de fusion.
       else
@@ -188,7 +153,7 @@ Table_sections get_merged_progbits_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, El
         Tablesec.sections[Tablesec.nbSections] = init_section_size(size1 + size2);
         Tablesec.sections[Tablesec.nbSections].offset = size1;
       }
-      getname_section_64(f1, header1, i, Tablesec.sections[Tablesec.nbSections].name);
+      strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
       Tablesec.sections[Tablesec.nbSections].oldindexfich2 = -1;
 
       // On imprime maintenant le contenu des sections ; on commence par se placer correctement dans le fichier 1.
@@ -211,30 +176,28 @@ Table_sections get_merged_progbits_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, El
 
   // On doit maintenant rajouter les sections de la partie 2.
   // On maintient à jour l'index du prochain element a rajouter.
-  index = header1.e_shnum;
+  index = sections1->nb_section;
   // On ignore le 0, qui est vide.
-  for (i = 1; i < header2.e_shnum; i++)
+  for (i = 1; i < sections2->nb_section; i++)
   {
     if (Mtable.id_section_merge[i] == -1)
     {
-      // On se place puis on recupere les donnees du header de la fonction.
-      fseek(f2, header2.e_shoff + i * header2.e_shentsize, SEEK_SET);
-      fread(&name, sizeof(Elf64_Word), 1, f2);
-      fread(&type, sizeof(Elf64_Word), 1, f2);
+        // On se place puis on recupere les donnees du header de la fonction.
+        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
+        type = sections1->sec_list[i].sh_type;
 
       // On ne la rajoute que si elle est du type PROGBITS.
       if (type == SHT_PROGBITS)
       {
         // On saute les champs qui ne nous interessent pas.
-        fseek(f2, sizeof(Elf64_Xword) + sizeof(Elf64_Addr), SEEK_CUR);
-        fread(&offset2, sizeof(Elf64_Off), 1, f2);
-        fread(&size2, sizeof(Elf64_Xword), 1, f2);
+        offset2 = sections2->sec_list[i].sh_offset;
+        size2 = sections2->sec_list[i].sh_size;
 
         // On met à jour notre structure avec les informations apportées.
         Tablesec.index_section[Tablesec.nbSections] = index;
         Tablesec.fusion[Tablesec.nbSections] = 0;
         Tablesec.sections[Tablesec.nbSections] = init_section_size(size2);
-        getname_section_64(f2, header2, i, Tablesec.sections[Tablesec.nbSections].name);
+        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections2->names[i].nom);
         Tablesec.sections[Tablesec.nbSections].oldindexfich2 = i;
 
         // On imprime maintenant le contenu de la section ; on commence par se placer correctement dans le fichier 2.
@@ -287,238 +250,4 @@ void affiche_table_section(Table_sections Tablesec)
     }
     printf("\n");
   }
-}
-
-
-/*********************************/
-/* Version 32 bits des fonctions */
-/*********************************/
-
-/* Fonction donnant le nom de section numero id dans le fichier ELF et place sa valeur dans nom.
-On assume que suffisamment de place y est allouée. Attention : cela change la position du descripteur f ! */
-void getname_section_32(FILE *f, Elf32_Ehdr header, int id, char *nom)
-{
-  Elf32_Off offset;
-  Elf32_Word sh_name;
-  // On recupère l'index du nom de la section.
-  fseek(f, header.e_shoff + id * header.e_shentsize, SEEK_SET);
-  fread(&sh_name, sizeof(Elf32_Word), 1, f);
-  // On récupère le nom de la section.
-  fseek(f, header.e_shoff + header.e_shstrndx * header.e_shentsize + 2 * sizeof(Elf32_Word) + sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_SET);
-  fread(&offset, sizeof(Elf32_Off), 1, f);
-  fseek(f, offset + sh_name, SEEK_SET);
-  int j = 0;
-  fread(&nom[j], sizeof(unsigned char), 1, f);
-  while (nom[j] != '\0')
-  {
-    j++;
-    fread(&nom[j], sizeof(unsigned char), 1, f);
-  }
-}
-
-// Fonction d'initialisation de la table des fusions (décrite dans 'progbits.h') avec des -1.
-Merge_table_progbits initmerge_32(Elf32_Ehdr header2)
-{
-  Merge_table_progbits Mtable;
-  Mtable.nbmerge = 0;
-  for (int i = 0; i < header2.e_shnum; i++)
-  {
-    Mtable.id_section_merge[i] = -1;
-  }
-  return Mtable;
-}
-
-/* Fonction de recherche des sections progbits dans le fichier 2.
-On regarde ensuite si il existe une section de même nom dans le fichier 1.
-Renvoie le nombre de fusions effectuées, et desquelles il s'agit. */
-Merge_table_progbits search_progbits_f2_32(FILE *f1, FILE *f2, Elf32_Ehdr header1, Elf32_Ehdr header2)
-{
-  int i;
-  int j;
-  Elf32_Word type1;
-  Elf32_Word type2;
-  char nom1[100];
-  char nom2[100];
-  int test;
-
-  // On crée la table.
-  Merge_table_progbits Mtable = initmerge_32(header2);
-
-  // On parcourt les sections du fichier 2.
-  for (i = 0; i < header2.e_shnum; i = i + 1)
-  {
-    // On verifie si la section actuelle du fichier 2 est de type progbits.
-    fseek(f2, header2.e_shoff + i * header2.e_shentsize + sizeof(Elf32_Word), SEEK_SET);
-    fread(&type2, sizeof(Elf32_Word), 1, f2);
-
-    // Si la section actuelle du fichier 2 est de type progbits, on cherche son nom.
-    if (type2 == SHT_PROGBITS)
-    {
-      getname_section_32(f2, header2, i, nom2);
-      printf("On trouve la section %s dans le fichier 2 qui est de type progbits\n", nom2);
-      /* On regarde alors si son nom correspond à une section du fichier 1 de type progbits en parcourant les sections du fichier 1.
-      'test' verifie si on a trouvé une section de même nom. */
-      test = 0;
-      for (j = 0; j < header1.e_shnum && test == 0; j = j + 1)
-      {
-        // On verifie si la section actuelle du fichier 1 est de type progbits.
-        fseek(f1, header1.e_shoff + j * header1.e_shentsize + sizeof(Elf32_Word), SEEK_SET);
-        fread(&type1, sizeof(Elf32_Word), 1, f1);
-        // Si la section actuelle du fichier 1 est de type progbits, on cherche son nom.
-        if (type1 == SHT_PROGBITS)
-        {
-          getname_section_32(f1, header1, j, nom1);
-
-          // Si son nom est le même que celui de la section actuelle du fichier2, on doit les fusionner.
-          if (strcmp(nom1, nom2) == 0)
-          {
-            printf("Il faut merge les sections %s dans le numero %d\n", nom1, j);
-            Mtable.id_section_merge[i] = j;
-            Mtable.nbmerge++;
-            test = 1;
-          }
-        }
-      }
-      if (test == 0)
-        printf("Il faut ajouter la section %s dans le numero %d\n", nom2, header1.e_shnum + i - Mtable.nbmerge);
-    }
-  }
-  return Mtable;
-}
-
-/* Fonction vérifiant si une fusion (de progbits) est à faire sur cette section.
-Retourne le numero avec lequel fusionner si il y a une fusion, -1 sinon. */
-int verif_fusion_progbits_32(int id, Merge_table_progbits Mtable, Elf32_Ehdr header)
-{
-  for (int i = 0; i < header.e_shnum; i++)
-  {
-    if (Mtable.id_section_merge[i] == id)
-      return i;
-  }
-  return -1;
-}
-
-// Fonction effectuant la fusion des sections PROGBITS des deux fichiers.
-Table_sections get_merged_progbits_32(FILE *f1, FILE *f2, Elf32_Ehdr header1, Elf32_Ehdr header2, Merge_table_progbits Mtable)
-{
-  int i;
-  int verif;
-  Elf32_Word size1;
-  Elf32_Word size2;
-  Elf32_Word type;
-  unsigned char temp;
-  int index; // header1.e_shnum + header2.e_shnum - Mtable.nbmerge -2.
-  Elf32_Word name;
-
-  // Structure permettant de stocker les informations utiles pour l'etape 6,  c'est a dire les progbits fusionnes et.
-  Table_sections Tablesec;
-  Tablesec.nbSections = 0;
-
-  // On stocke Mtable (pour le retourner avec le reste) dans Tablesec.
-  Tablesec.Mtable = Mtable;
-
-  // Stocke les offsets des entrees de la table de sections dans leurs fichiers respectifs.
-  Elf32_Off offset1;
-  Elf32_Off offset2;
-
-  // On commence par les progbits du fichier 1, on saute donc le 0 qui n'en est jamais 1.
-  for (i = 1; i < header1.e_shnum; i++)
-  {
-    // On recupere le nom de la section.
-    fseek(f1, header1.e_shoff + i * header1.e_shentsize, SEEK_SET);
-    fread(&name, sizeof(Elf32_Word), 1, f1);
-    fread(&type, sizeof(Elf32_Word), 1, f1);
-    if (type == SHT_PROGBITS)
-    {
-      // On saute les champs qui ne nous interessent pas.
-      fseek(f1, sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_CUR);
-      fread(&offset1, sizeof(Elf32_Off), 1, f1);
-      fread(&size1, sizeof(Elf32_Word), 1, f1);
-
-      // On vérifie si on a une fusion à faire.
-      verif = verif_fusion_progbits_32(i, Mtable, header2);
-      // Cas de la fusion.
-      if (verif != -1)
-      {
-        Tablesec.fusion[Tablesec.nbSections] = 1;
-        // On se déplace dans le fichier 2 pour recuperer la taille de la section correspondante.
-        fseek(f2, header2.e_shoff + verif * header2.e_shentsize + sizeof(Elf32_Addr) + sizeof(Elf32_Word) + sizeof(Elf32_Word) * 2, SEEK_SET);
-
-        // On lit le size pour le rajouter (l'offset est gardé pour plus tard, voir l'impression du contenu).
-        fread(&offset2, sizeof(Elf32_Off), 1, f2);
-        fread(&size2, sizeof(Elf32_Word), 1, f2);
-      }
-      // On note sinon l'absence de fusion.
-      else
-        Tablesec.fusion[Tablesec.nbSections] = 0;
-
-      // On met à jour notre structure avec les informations apportees.
-      Tablesec.index_section[Tablesec.nbSections] = i;
-      if (verif == -1)
-      {
-        Tablesec.sections[Tablesec.nbSections] = init_section_size(size1);
-      }
-      else
-      {
-        Tablesec.sections[Tablesec.nbSections] = init_section_size(size1 + size2);
-        Tablesec.sections[Tablesec.nbSections].offset = size1;
-      }
-      getname_section_32(f1, header1, i, Tablesec.sections[Tablesec.nbSections].name);
-
-      // On imprime maintenant le contenu des sections ; on commence par se placer correctement dans le fichier 1.
-      fseek(f1, offset1, SEEK_SET);
-
-      // On écrit le contenu dans la structure.
-      fread(Tablesec.sections[Tablesec.nbSections].content, sizeof(unsigned char), size1, f1);
-
-      // Si on fait une fusion, on concatene la section contenue dans le fichier 2.
-      if (verif != -1)
-      {
-        fseek(f2, offset2, SEEK_SET);
-        fread(Tablesec.sections[Tablesec.nbSections].content + Tablesec.sections[Tablesec.nbSections].offset, sizeof(unsigned char), size2, f2);
-      }
-
-      // On incremente la taille du tableau des sections progbits.
-      Tablesec.nbSections++;
-    }
-  }
-
-  // On doit maintenant rajouter les sections de la partie 2 ; on maintient a jour l'index du prochain element a rajouter.
-  index = header1.e_shnum;
-  // On ignore le 0, qui est vide.
-  for (i = 1; i < header2.e_shnum; i++)
-  {
-    if (Mtable.id_section_merge[i] == -1)
-    {
-      // On se place puis on recupere les donnees du header de la fonction.
-      fseek(f2, header2.e_shoff + i * header2.e_shentsize, SEEK_SET);
-      fread(&name, sizeof(Elf32_Word), 1, f2);
-      fread(&type, sizeof(Elf32_Word), 1, f2);
-
-      if (type == SHT_PROGBITS)
-      {
-        // On saute les champs qui ne nous interessent pas.
-        fseek(f2, sizeof(Elf32_Word) + sizeof(Elf32_Addr), SEEK_CUR);
-        fread(&offset2, sizeof(Elf32_Off), 1, f2);
-        fread(&size2, sizeof(Elf32_Word), 1, f2);
-
-        // On met à jour notre structure avec les informations apportees.
-        Tablesec.index_section[Tablesec.nbSections] = index;
-        Tablesec.fusion[Tablesec.nbSections] = 0;
-        Tablesec.sections[Tablesec.nbSections] = init_section_size(size2);
-        getname_section_32(f2, header2, i, Tablesec.sections[Tablesec.nbSections].name);
-
-        // On imprime maintenant le contenu de la section ; on commence par se placer correctement dans le fichier 2.
-        fseek(f2, offset2, SEEK_SET);
-
-        // On écrit le contenu de la section dans la structure.
-        fread(Tablesec.sections[Tablesec.nbSections].content, sizeof(unsigned char), size2, f2);
-
-        // On incrémente l'index.
-        index++;
-        Tablesec.nbSections++;
-      }
-    }
-  }
-  return Tablesec;
 }

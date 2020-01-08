@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "entete.h"
+#include "header.h"
 #include <elf.h>
 #include "progbits.h"
 #include <string.h>
@@ -25,28 +25,16 @@ int main (int argc, char ** argv){
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
     return 1;
   }
-  Elf_identificator headid1;
-  Elf_identificator headid2;
-  headid1 = Lecture_identificateur(f1);
-  headid2 = Lecture_identificateur(f2);
-  
-  if (headid1.e_ident[4] == ELFCLASS32 && headid2.e_ident[4] == ELFCLASS32){
-    Elf32_Ehdr header1;
-    Elf32_Ehdr header2;
-    header1 = Lecture32(f1,headid1);
-    header2 = Lecture32(f2,headid2);
-    table_progbits = get_merged_progbits_32 (f1, f2, header1, header2, Mtable);
-    affiche_table_section(table_progbits);
-  }
-  else if (headid1.e_ident[4] == ELFCLASS64 && headid2.e_ident[4] == ELFCLASS64){
-    Elf64_Ehdr header1;
-    Elf64_Ehdr header2;
-    header1 = Lecture64(f1,headid1);
-    header2 = Lecture64(f2,headid2);
-    Mtable = search_progbits_f2_64(f1, f2, header1, header2);
-    table_progbits = get_merged_progbits_64 (f1, f2, header1, header2, Mtable);
-    affiche_table_section(table_progbits);
-  }
+
+  Elf64_Ehdr header1;
+  Elf64_Ehdr header2;
+  header1 = read_header(f1);
+  header2 = read_header(f2);
+  section_list *sections1 = read_tablesection(f1,header1);
+  section_list *sections2 = read_tablesection(f1,header2);
+  Mtable = search_progbits_f2(sections1,sections2);
+  table_progbits = get_merged_progbits (f1, f2,sections1,sections2, Mtable);
+  affiche_table_section(table_progbits);
   fclose(f1);
   fclose(f2);
   return 0;
