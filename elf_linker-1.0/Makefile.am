@@ -40,7 +40,7 @@ EXTRA_DIST=filtre.pl
 readelf_header_SOURCES=$(COMMON) readelf_header.c
 readelf_section_list_SOURCES=$(COMMON) $(TABLESECTION) readelf_section_list.c
 readelf_section_content_SOURCES=$(COMMON) $(READSECTION) $(TABLESECTION) readelf_section_content.c
-readelf_symbols_table_SOURCES=$(COMMON) $(SYMBOLTABLE) readelf_symbols_table.c
+readelf_symbols_table_SOURCES=$(COMMON) $(SYMBOLTABLE) $(TABLESECTION) readelf_symbols_table.c
 readelf_relocation_SOURCES=$(COMMON) $(RELOCA) readelf_relocation.c
 
 EXTRA_DIST+=sample_run.sh
