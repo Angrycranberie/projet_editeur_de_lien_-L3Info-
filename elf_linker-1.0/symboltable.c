@@ -57,8 +57,8 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list
         fread(&symtable.entries[j].st_info, sizeof(unsigned char),1,f);
         fread(&symtable.entries[j].st_other, sizeof(unsigned char),1,f);
         fread(&symtable.entries[j].st_shndx, sizeof(Elf64_Section),1,f);
-        bits_version ? fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f) : fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f), symtable.entries[j].st_value &= 0xFFFFFFFF;
-        bits_version ? fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f) : fread(&symtable.entries[j].st_size, sizeof(Elf32_Word),1,f), symtable.entries[j].st_size &= 0xFFFFFFFF;
+        bits_version ? fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f) : (fread(&symtable.entries[j].st_value, sizeof(Elf64_Addr),1,f), symtable.entries[j].st_value &= 0xFFFFFFFF);
+        bits_version ? fread(&symtable.entries[j].st_size, sizeof(Elf64_Xword),1,f) : (fread(&symtable.entries[j].st_size, sizeof(Elf32_Word),1,f), symtable.entries[j].st_size &= 0xFFFFFFFF);
         
         // On corrige son endianess
         if(diff_endianess){
