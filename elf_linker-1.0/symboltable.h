@@ -30,29 +30,9 @@ typedef struct
   string_table stringtable; // table des chaines associee
 } symbol_table_64;
 
-// Structure permettant de stocker en memoire une table de symboles 32 bits (inutile ici)
-typedef struct
-{
-  int indextable; // Index de la table des symboles 
-  int indexstring; // Index de la table des chaines
-  int nbsymbols; // Nombre de symboles
-  int tailleentree; // taille d'une entree
-  Elf32_Sym * entries; // table des symboles a proprement parler
-  oldid * renum; // table de renumerotation: Conserve pour l' entree i, dans renum[i].id1, l'id qu'il avait dans le fichier 1, et dans renum[i].id2, celui dans le fichier 2. (voir plus haut) Utilisé uniquement pour la fusion
-  string_table stringtable; // table des chaines associee
-} symbol_table_32;
-
 
 symbol_table_64 read_symbols_tables_64 (FILE* f, Elf64_Ehdr header, section_list seclist);
 
 void print_symbol_table_64 (symbol_table_64 symtable);
-
-
-
-// Fonctions inutiles//
-symbol_table_32 read_symbols_tables_32 (FILE* f, Elf32_Ehdr header);
-
-void print_symbol_table_32 (symbol_table_32 symtable);
-// Fonctions inutiles //
 
 #endif

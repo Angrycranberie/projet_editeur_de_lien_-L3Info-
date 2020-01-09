@@ -2,6 +2,7 @@
 #include <elf.h>
 #include "header.h"
 #include "reloca.h"
+#include "tablesection.h"
 
 // Donne les informations sur les sections du fichier ELF passé en argument
 int main(int argc, char **argv)
@@ -18,22 +19,16 @@ int main(int argc, char **argv)
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
     return 1;
   }
-
-  // ATTENTION : pas fonctionnel pour le moment
-  // En attente de modularisation
+  // etape 1 lecture du header
   Elf64_Ehdr header = read_header(f);
-  if (header.e_ident[EI_CLASS] == ELFCLASS32)
-  {
-    symbol_table_64 symtable;
-    symtable = read_symbols_tables_64(f, header);
-    print_symbol_table_64(symtable);
-    
-  }
-  else if (header.e_ident[EI_CLASS] == ELFCLASS64)
-  {
-    symbol_table_32 symtable;
-    symtable = read_symbols_tables_32(f, header);
-    print_symbol_table_32(symtable);
-  }
+  //etape 2 lecture de la liste des sections
+  section_list seclist = *read_tablesection(f,header);
+  
+  //etape 5 lecture des tables de rel
+  list_rela_table_64 listrela;
+  listrela = search_reloca_tables_64(f, header, seclist);
+  // affichage du resultat
+  print_list_rela_64(listrela,header);
+
   return 0;
 }
