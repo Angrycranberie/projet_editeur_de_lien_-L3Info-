@@ -28,7 +28,7 @@ int main(int argc, char **argv)
   list_rela_table_64 listrela;
   listrela = search_reloca_tables_64(f, header, seclist);
   // affichage du resultat
-  print_list_rela_64(listrela);
+  print_list_rela_64(listrela,header);
 
   return 0;
 }

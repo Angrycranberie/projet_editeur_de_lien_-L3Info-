@@ -18,7 +18,7 @@ int main (int argc, char ** argv){
   Merge_table_progbits Mtable;
   Table_sections table_progbits;
   FILE * f1;
-  FILE * f2;
+  FILE * f2; 
   f1 = fopen(argv[1],"r");
   if (f1==NULL){
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
@@ -44,15 +44,15 @@ int main (int argc, char ** argv){
   symtable2 = read_symbols_tables_64(f2, header2, seclist2);
   
   //Resultats de l'etape 6
-  Mtable = search_progbits_f2_64(f1, f2, header1, header2);
-  table_progbits = get_merged_progbits_64 (f1, f2, header1, header2, Mtable);
+  Mtable = search_progbits_f2(&seclist1, &seclist2);
+  table_progbits = get_merged_progbits (f1, f2, &seclist1, &seclist2, Mtable);
   
   
   print_symbol_table_64(symtable1);
   print_symbol_table_64(symtable2);
   
   //etape 7 a proprement parler (fusion des tables de symboles)
-  symtablefusion = fusion_symbol_tables_64(table_progbits, symtable1, symtable2);
+  symtablefusion = fusion_symbol_tables_64(table_progbits,  symtable1, symtable2);
   
   // affichage du resultat
   print_symbol_table_64(symtablefusion);

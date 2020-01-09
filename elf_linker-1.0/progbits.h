@@ -2,6 +2,7 @@
 #define _PROGBITS_H 1
 #include <elf.h>
 #include "values.h"
+#include "tablesection.h"
 
 
 /* Structure permettant de se souvenir des sections que l'on doit fusionner.
@@ -19,7 +20,7 @@ typedef struct
   int offset;             // Offset du debut de la section qui a été concaténée, si il y en a une, sinon la valeur n'a pas d'importance.
   char name[NOMMAX];      // Retient le nom de la section.
   unsigned char *content; // Contenu octet par octet de la section.
-  int oldindexfich2       // Permet de connaitre l'ancien index de la section dans le fichier 2. Si la section est fusionnée ou fait partie du fichier 1, cela vaut -1.
+  int oldindexfich2;       // Permet de connaitre l'ancien index de la section dans le fichier 2. Si la section est fusionnée ou fait partie du fichier 1, cela vaut -1.
 } Section_progbits;
 
 // Remarque importante : cette table des sections ne contient que les sections de type PROGBITS.
@@ -44,39 +45,28 @@ Section_progbits init_section_size(int taille);
 - Le contenu en hexadecimal de la section. */
 void affiche_table_section(Table_sections Tablesec);
 
-// Fonction stockant dans la variable char le nom de la section d'index id, contenu dans le fichier ELF decrit par f, et dont le header est déjà conteu dans header.
-void getname_section_32(FILE *f, Elf32_Ehdr header, int id, char *nom);
 
-// Fonction d'initialisation de la table de fusion, plaçant des -1 (pas de fusion) à chaque index correspondant à une section du fichier 2, le nombre étant contenu dans header2.
-Merge_table_progbits initmerge_32(Elf32_Ehdr header2);
+// Fonction d'initialisation de la table de fusion, plaçant des -1 (pas de fusion) à chaque index correspondant à une section du fichier 2, le nombre étant contenu dans sections->nb_section.
+Merge_table_progbits initmerge(section_list *sections);
+
+// Cherche si il existe une section du nom donné en argument de type PROGBYTE, donne la dernière respectant ces conditions
+int search_section_name_progbits(char *nom,section_list *sections);
 
 /* Fonction de remplissage de la table des fusions :
 - Cherche les sections progbits du fichier 1,
 - Vérifie si il y a une table progbits de même nom dans le fichier 2 ; si oui, on ajoute cette fusion dans
 la table des fusions que l'on renvoie à la fin, ceci, jusqu'à avoir épuisé les sections du fichier1. */
-Merge_table_progbits search_progbits_f2_32(FILE *f1, FILE *f2, Elf32_Ehdr header1, Elf32_Ehdr header2);
+Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *sections2);
 
 /* Fonction vérifiant si il faut fusionner la section d'index id du fichier 1.
 - Renvoie -1 si la réponse est non,
 - Renvoie l'index dans le fichier 2 de la section avec laquelle il doit fusionner sinon. */
-int verif_fusion_progbits_32(int id, Merge_table_progbits Mtable, Elf32_Ehdr header);
+int verif_fusion_progbits(int id, Merge_table_progbits Mtable, section_list *sections);
 
 /* Fonction créant une nouvelle table des sections en fusionnant comme décrit dans la table de fusion Mtable.
 La fusion de deux sections s'effectue par concaténation, la partie des données correspondant au fichier 2 est concaténée à la suite de celles correspondant au fichier1.
 On garde les indices du fichier 1, et les sections du fichier 2 que l'on ne fusionne pas sont ajoutées à la suite.
 Renvoie une table de sections correspondant à la description ci-dessus. */
-Table_sections get_merged_progbits_32(FILE *f1, FILE *f2, Elf32_Ehdr header1, Elf32_Ehdr header2, Merge_table_progbits Mtable);
-
-
-// Les fonctions suivantes sont les équivalents en 64 bits des fonctions ci-dessus.
-void getname_section_64(FILE *f, Elf64_Ehdr header, int id, char *nom);
-
-Merge_table_progbits initmerge_64(Elf64_Ehdr header2);
-
-Merge_table_progbits search_progbits_f2_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, Elf64_Ehdr header2);
-
-int verif_fusion_progbits_64(int id, Merge_table_progbits Mtable, Elf64_Ehdr header);
-
-Table_sections get_merged_progbits_64(FILE *f1, FILE *f2, Elf64_Ehdr header1, Elf64_Ehdr header2, Merge_table_progbits Mtable);
+Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, section_list *sections2, Merge_table_progbits Mtable);
 
 #endif
