@@ -5,6 +5,7 @@
 #include "progbits.h"
 #include "symboltable.h"
 #include "fusionsymbole.h"
+#include "values.h"
 
 /*********************************/
 /* Version 64 bits des fonctions */
@@ -23,8 +24,7 @@ symbol_table_64 fusion_symbol_tables_64(Table_sections sections, symbol_table_64
   // Cette table permet de se rappeler quels symboles du fichier 2 ont déjà été traités. Une entrée vaut
   // 1 si le sybole d'indice correspondant est traité, 0 sinon.
   // On la remplit ici:
-  for (i = 0; i < symtab2.nbsymbols; i++) avancement[i] = 0;
-
+  for (i = 0; i < symtab2.nbsymbols; i++) avancement[i] = 0; 
   // On initialise la table de symboles à rendre.
   fusionsym.indextable = symtab1.indextable;     // On garde l'index de la section du fichier 1.
   fusionsym.indexstring = symtab1.indexstring;   // Idem.
