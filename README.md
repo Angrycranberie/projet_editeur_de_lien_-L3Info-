@@ -36,7 +36,7 @@ arguments : "fichier elf" "fichier elf" \
  \
 ETAPES 7 \
 Exécutable : etape7 \
-arguments :  \
+arguments :"fichier elf" "fichier elf" \
  \
 ETAPES 8 \
 Exécutable :  \
