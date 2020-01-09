@@ -23,6 +23,8 @@ bin_PROGRAMS+=readelf_section_list
 bin_PROGRAMS+=readelf_section_content
 bin_PROGRAMS+=readelf_symbols_table
 bin_PROGRAMS+=readelf_relocation
+bin_PROGRAMS+=etape6
+bin_PROGRAMS+=etape7
 
 DEBUG=debug.h debug.c
 UTIL=util.h util.c
