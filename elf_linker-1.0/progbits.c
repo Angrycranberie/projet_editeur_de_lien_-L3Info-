@@ -10,7 +10,8 @@ Merge_table_progbits initmerge(section_list *sections)
 {
   Merge_table_progbits Mtable;
   Mtable.nbmerge = 0;
-  for (int i = 0; i < sections->nb_section; i++) { Mtable.id_section_merge[i] = -1; }
+  int i;
+  for (i = 0; i < sections->nb_section; i++) { Mtable.id_section_merge[i] = -1; }
   return Mtable;
 }
 
@@ -31,7 +32,6 @@ On regarde ensuite si il existe une section de même nom dans le fichier 1.
 Renvoie le nombre de fusions effectuées, et desquelles il s'agit. */
 Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *sections2){
     int i;
-    int j;
     Elf64_Word type2;
     char nom1[NOMMAX];
     char nom2[NOMMAX];
@@ -55,7 +55,7 @@ Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *s
             'test' verifie si on a trouvé une section de même nom. */
             id = search_section_name_progbits((char *)nom2 , sections1);
             
- 
+
             if (id == -1)
                 printf("Il faut ajouter la section %s dans le numero %d\n", nom2, sections1->nb_section + i - Mtable.nbmerge);
             else{
@@ -72,7 +72,8 @@ Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *s
 /* Fonction vérifiant si une fusion (de progbits) est à faire sur cette section.
 Retourne le numero avec lequel fusionner si il y a une fusion, -1 sinon. */
 int verif_fusion_progbits(int id, Merge_table_progbits Mtable, section_list *sections){
-    for (int i = 0; i < sections->nb_section; i++){
+    int i;
+    for (i = 0; i < sections->nb_section; i++){
         if (Mtable.id_section_merge[i] == id)
             return i;
     }
@@ -99,9 +100,7 @@ Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, 
   Elf64_Xword size1;
   Elf64_Xword size2;
   Elf64_Word type;
-  unsigned char temp;
   int index; // header1.e_shnum + header2.e_shnum - Mtable.nbmerge -2.
-  Elf64_Word name;
 
   // Structure permettant de stocker les informations utiles pour l'etape 6.
   Table_sections Tablesec;
@@ -183,12 +182,12 @@ Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, 
     if (Mtable.id_section_merge[i] == -1)
     {
         // On se place puis on recupere les donnees du header de la fonction.
-        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
+        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections2->names[i].nom);
         type = sections2->sec_list[i].sh_type;
+
       // On ne la rajoute que si elle est du type PROGBITS.
       if (type == SHT_PROGBITS)
       {
-        
         // On saute les champs qui ne nous interessent pas.
         offset2 = sections2->sec_list[i].sh_offset;
         size2 = sections2->sec_list[i].sh_size;
@@ -221,7 +220,8 @@ void affiche_table_section(Table_sections Tablesec)
 
   printf("Liste des sections de type PROGBITS dans le fichier final :\n");
   // On affiche chacune des sections individuellement.
-  for (int i = 0; i < Tablesec.nbSections; i++)
+  int i;
+  for (i = 0; i < Tablesec.nbSections; i++)
   {
     // Permet de reconnaitre si il y a eu fusion.
     if (Tablesec.fusion[i] == 1)
@@ -237,7 +237,8 @@ void affiche_table_section(Table_sections Tablesec)
     }
 
     printf("  Contenu hexadecimal de la section :\n");
-    for (int j = 0; j < Tablesec.sections[i].taille; j++)
+    int j;
+    for (j = 0; j < Tablesec.sections[i].taille; j++)
     {
       if (j % 16 == 0)
         printf("    ");
