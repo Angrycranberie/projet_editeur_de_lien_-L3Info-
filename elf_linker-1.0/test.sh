@@ -35,21 +35,33 @@ then
 		for j in $files
 		do
 			name=$(basename $j .o)
-			arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out
-			if [ "$i" = "h" ]
+		
+			# On sépare le traitement de l'executable readelf_section_content des autres
+			if [ "$i" = "x" ]
 			then
-				m=header
-			elif [ "$i" = "S" ]
-			then
-				m=section_list
-			elif [ "$i" = "s" ]
-			then
-				m=symbols_table
-			elif [ "$i" = "r" ]
-			then
-				m=relocation
+
+				./x.sh $name $files		
+
+			else
+
+				arm-eabi-readelf -$i Examples_loader/$name.o > Resultat/$i/$name.out					
+				# On sélectionne l'exécutable à tester
+				if [ "$i" = "h" ]
+				then
+					m=header
+				elif [ "$i" = "S" ]
+				then
+					m=section_list
+				elif [ "$i" = "s" ]
+				then
+					m=symbols_table
+				elif [ "$i" = "r" ]
+				then
+					m=relocation
+				fi
+				# Création et rangement du fichier résultat
+				./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
 			fi
-			./readelf_$m Examples_loader/$name.o > Resultat/$i/Our_$name.out
 		done
 	done
 	echo "Resultats disponibles"
