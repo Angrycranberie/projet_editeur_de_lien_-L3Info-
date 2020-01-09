@@ -3,10 +3,11 @@ Compilation et Lancement
 Pour lancer le projet, il suffit simplement de suivre une suite d’étapes : 
 
 1 - Cloner le projet depuis GIT,\
-2 - Utiliser la commande ‘autoreconf’ dans le répertoire ‘elf_linker 1.0’,\
-3 - Utiliser la commande ‘./configure’ pour faire l’Automake du projet,\
-4 - Utiliser la commande ‘make’ afin de réaliser les exécutables du projet,\
-5 - Lancer l’exécutable correspondant à l’étape que l’on veut.\		
+2 - Utiliser la commande 'make distclean' dans le répertoire 'elf_linker 1.0', \
+3 - Utiliser la commande ‘autoreconf’ dans le répertoire ‘elf_linker 1.0’,\
+4 - Utiliser la commande ‘./configure’ pour faire l’Automake du projet,\
+5 - Utiliser la commande ‘make’ afin de réaliser les exécutables du projet,\
+6 - Lancer l’exécutable correspondant à l’étape que l’on veut.\		
 
 Liste des étapes et de leur exécutable : \
 
