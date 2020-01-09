@@ -32,6 +32,8 @@ READSECTION=readsection.h readsection.c
 TABLESECTION=tablesection.h tablesection.c
 SYMBOLTABLE=symboltable.h symboltable.c
 RELOCA=reloca.h reloca.c
+PROGBITS=progbits.h progbits.c
+FUSIONSYMBOLE=fusionsymbole.h fusionsymbole.c
 
 EXTRA_DIST=filtre.pl
 # SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
@@ -42,6 +44,8 @@ readelf_section_list_SOURCES=$(COMMON) $(TABLESECTION) readelf_section_list.c
 readelf_section_content_SOURCES=$(COMMON) $(READSECTION) $(TABLESECTION) readelf_section_content.c
 readelf_symbols_table_SOURCES=$(COMMON) $(SYMBOLTABLE) $(TABLESECTION) readelf_symbols_table.c
 readelf_relocation_SOURCES=$(COMMON) $(RELOCA) readelf_relocation.c
+etape6_SOURCES=$(COMMON) $(PROGBITS) etape6.c
+etape7_SOURCES=$(COMMON) $(PROGBITS) $(TABLESECTION) $(SYMBOLTABLE) $(FUSIONSYMBOLE) etape7.c
 
 EXTRA_DIST+=sample_run.sh
 
