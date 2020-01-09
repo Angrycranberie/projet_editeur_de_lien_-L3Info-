@@ -182,8 +182,8 @@ Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, 
     if (Mtable.id_section_merge[i] == -1)
     {
         // On se place puis on recupere les donnees du header de la fonction.
-        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
-        type = sections1->sec_list[i].sh_type;
+        strcpy(Tablesec.sections[Tablesec.nbSections].name,sections2->names[i].nom);
+        type = sections2->sec_list[i].sh_type;
 
       // On ne la rajoute que si elle est du type PROGBITS.
       if (type == SHT_PROGBITS)
