@@ -26,7 +26,7 @@ int search_section_name_progbits(char *nom,section_list *sections){
     return id;
 }
 
-/* Fonction de recherche des sections progbits dans le fichier 2.
+/* Fonction de recherche des sections progbits dans le fichier 2.  
 On regarde ensuite si il existe une section de même nom dans le fichier 1.
 Renvoie le nombre de fusions effectuées, et desquelles il s'agit. */
 Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *sections2){
@@ -42,19 +42,19 @@ Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *s
 
     // On parcourt les sections du fichier 2.
     for (i = 0 ; i < sections2->nb_section ; i = i + 1){
-
+      
         // On verifie si la section actuelle du fichier 2 est de type progbits.
         type2 = sections2->sec_list[i].sh_type;
-
         // Si la section actuelle du fichier 2 est de type progbits, on cherche son nom.
         if (type2 == SHT_PROGBITS){
-
+            
             strcpy(nom2,sections2->names[i].nom);
             printf("On trouve la section %s dans le fichier 2 qui est de type progbits\n", nom2);
 
             /* On regarde alors si son nom correspond à une section du fichier 1 de type progbits en parcourant les sections du fichier 1.
             'test' verifie si on a trouvé une section de même nom. */
             id = search_section_name_progbits((char *)nom2 , sections1);
+            
 
             if (id == -1)
                 printf("Il faut ajouter la section %s dans le numero %d\n", nom2, sections1->nb_section + i - Mtable.nbmerge);

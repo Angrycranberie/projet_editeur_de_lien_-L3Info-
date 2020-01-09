@@ -16,7 +16,7 @@ int main (int argc, char ** argv){
   FILE * f2;
   Table_sections table_progbits;
   f1 = fopen(argv[1],"r");
-  if (f1==NULL){
+  if (f1==NULL){ 
     printf("Erreur lors de l'ouverture en lecture du fichier\n");
     return 1;
   }
@@ -31,7 +31,7 @@ int main (int argc, char ** argv){
   header1 = read_header(f1);
   header2 = read_header(f2);
   section_list *sections1 = read_tablesection(f1,header1);
-  section_list *sections2 = read_tablesection(f1,header2);
+  section_list *sections2 = read_tablesection(f2,header2);
   Mtable = search_progbits_f2(sections1,sections2);
   table_progbits = get_merged_progbits (f1, f2,sections1,sections2, Mtable);
   affiche_table_section(table_progbits);
