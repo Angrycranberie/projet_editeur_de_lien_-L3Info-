@@ -55,7 +55,7 @@ Merge_table_progbits search_progbits_f2(section_list *sections1, section_list *s
             'test' verifie si on a trouvé une section de même nom. */
             id = search_section_name_progbits((char *)nom2 , sections1);
             
-
+ 
             if (id == -1)
                 printf("Il faut ajouter la section %s dans le numero %d\n", nom2, sections1->nb_section + i - Mtable.nbmerge);
             else{
@@ -184,11 +184,11 @@ Table_sections get_merged_progbits(FILE *f1, FILE *f2, section_list *sections1, 
     {
         // On se place puis on recupere les donnees du header de la fonction.
         strcpy(Tablesec.sections[Tablesec.nbSections].name,sections1->names[i].nom);
-        type = sections1->sec_list[i].sh_type;
-
+        type = sections2->sec_list[i].sh_type;
       // On ne la rajoute que si elle est du type PROGBITS.
       if (type == SHT_PROGBITS)
       {
+        
         // On saute les champs qui ne nous interessent pas.
         offset2 = sections2->sec_list[i].sh_offset;
         size2 = sections2->sec_list[i].sh_size;
