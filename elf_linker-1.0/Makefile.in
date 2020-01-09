@@ -76,14 +76,17 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = ARM_runner_example$(EXEEXT)
+bin_PROGRAMS = readelf_header$(EXEEXT) readelf_section_list$(EXEEXT) \
+	readelf_section_content$(EXEEXT) \
+	readelf_symbols_table$(EXEEXT) readelf_relocation$(EXEEXT) \
+	etape6$(EXEEXT) etape7$(EXEEXT)
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(top_srcdir)/configure $(am__configure_deps) scanner.c \
-	$(top_srcdir)/build-aux/depcomp $(top_srcdir)/build-aux/ylwrap \
-	AUTHORS COPYING INSTALL README build-aux/compile \
-	build-aux/depcomp build-aux/install-sh build-aux/missing \
-	build-aux/ylwrap $(top_srcdir)/build-aux/compile \
+	$(top_srcdir)/configure $(am__configure_deps) \
+	$(top_srcdir)/build-aux/depcomp AUTHORS COPYING INSTALL README \
+	build-aux/compile build-aux/depcomp build-aux/install-sh \
+	build-aux/missing build-aux/ylwrap \
+	$(top_srcdir)/build-aux/compile \
 	$(top_srcdir)/build-aux/install-sh \
 	$(top_srcdir)/build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -98,14 +101,52 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__objects_1 = debug.$(OBJEXT) util.$(OBJEXT)
-am__objects_2 = csapp.$(OBJEXT) scanner.$(OBJEXT) \
-	gdb_protocol.$(OBJEXT) arm_simulator_interface.$(OBJEXT)
-am_ARM_runner_example_OBJECTS = $(am__objects_1) $(am__objects_2) \
-	ARM_runner_example.$(OBJEXT)
-ARM_runner_example_OBJECTS = $(am_ARM_runner_example_OBJECTS)
-ARM_runner_example_LDADD = $(LDADD)
-ARM_runner_example_DEPENDENCIES =
+am__objects_1 = debug.$(OBJEXT)
+am__objects_2 = util.$(OBJEXT)
+am__objects_3 = header.$(OBJEXT)
+am__objects_4 = $(am__objects_1) $(am__objects_2) $(am__objects_3)
+am__objects_5 = progbits.$(OBJEXT)
+am__objects_6 = tablesection.$(OBJEXT)
+am_etape6_OBJECTS = $(am__objects_4) $(am__objects_5) $(am__objects_6) \
+	etape6.$(OBJEXT)
+etape6_OBJECTS = $(am_etape6_OBJECTS)
+etape6_LDADD = $(LDADD)
+etape6_DEPENDENCIES =
+am__objects_7 = symboltable.$(OBJEXT)
+am__objects_8 = fusionsymbole.$(OBJEXT)
+am_etape7_OBJECTS = $(am__objects_4) $(am__objects_5) $(am__objects_6) \
+	$(am__objects_7) $(am__objects_8) etape7.$(OBJEXT)
+etape7_OBJECTS = $(am_etape7_OBJECTS)
+etape7_LDADD = $(LDADD)
+etape7_DEPENDENCIES =
+am_readelf_header_OBJECTS = $(am__objects_4) readelf_header.$(OBJEXT)
+readelf_header_OBJECTS = $(am_readelf_header_OBJECTS)
+readelf_header_LDADD = $(LDADD)
+readelf_header_DEPENDENCIES =
+am__objects_9 = reloca.$(OBJEXT)
+am_readelf_relocation_OBJECTS = $(am__objects_4) $(am__objects_6) \
+	$(am__objects_9) readelf_relocation.$(OBJEXT)
+readelf_relocation_OBJECTS = $(am_readelf_relocation_OBJECTS)
+readelf_relocation_LDADD = $(LDADD)
+readelf_relocation_DEPENDENCIES =
+am__objects_10 = readsection.$(OBJEXT)
+am_readelf_section_content_OBJECTS = $(am__objects_4) \
+	$(am__objects_10) $(am__objects_6) \
+	readelf_section_content.$(OBJEXT)
+readelf_section_content_OBJECTS =  \
+	$(am_readelf_section_content_OBJECTS)
+readelf_section_content_LDADD = $(LDADD)
+readelf_section_content_DEPENDENCIES =
+am_readelf_section_list_OBJECTS = $(am__objects_4) $(am__objects_6) \
+	readelf_section_list.$(OBJEXT)
+readelf_section_list_OBJECTS = $(am_readelf_section_list_OBJECTS)
+readelf_section_list_LDADD = $(LDADD)
+readelf_section_list_DEPENDENCIES =
+am_readelf_symbols_table_OBJECTS = $(am__objects_4) $(am__objects_7) \
+	$(am__objects_6) readelf_symbols_table.$(OBJEXT)
+readelf_symbols_table_OBJECTS = $(am_readelf_symbols_table_OBJECTS)
+readelf_symbols_table_LDADD = $(LDADD)
+readelf_symbols_table_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -134,14 +175,16 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-LEXCOMPILE = $(LEX) $(AM_LFLAGS) $(LFLAGS)
-AM_V_LEX = $(am__v_LEX_@AM_V@)
-am__v_LEX_ = $(am__v_LEX_@AM_DEFAULT_V@)
-am__v_LEX_0 = @echo "  LEX     " $@;
-am__v_LEX_1 = 
-YLWRAP = $(top_srcdir)/build-aux/ylwrap
-SOURCES = $(ARM_runner_example_SOURCES)
-DIST_SOURCES = $(ARM_runner_example_SOURCES)
+SOURCES = $(etape6_SOURCES) $(etape7_SOURCES) \
+	$(readelf_header_SOURCES) $(readelf_relocation_SOURCES) \
+	$(readelf_section_content_SOURCES) \
+	$(readelf_section_list_SOURCES) \
+	$(readelf_symbols_table_SOURCES)
+DIST_SOURCES = $(etape6_SOURCES) $(etape7_SOURCES) \
+	$(readelf_header_SOURCES) $(readelf_relocation_SOURCES) \
+	$(readelf_section_content_SOURCES) \
+	$(readelf_section_list_SOURCES) \
+	$(readelf_symbols_table_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -319,22 +362,40 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-AM_CFLAGS = -Wall -Werror -g -D DEBUG -D WARNING -D \
-	BIG_ENDIAN_SIMULATOR
+AM_CFLAGS = -Wall -g -D DEBUG -D WARNING
+# Décommenter cette ligne pour simuler un comportement en big endian
+#AM_CFLAGS+=-D BIG_ENDIAN_SIMULATOR
 # Uncomment if performance when running with -DDEBUG is an issue
 # Warning, if uncommented, issuing calls to debug functions during options
 # parsing might result in debug flag incorrectly set to 0 for some files
 #AM_CFLAGS+=-D CACHE_DEBUG_FLAG
 LDADD = -lpthread
 SUBDIRS = . Examples_loader
-COMMON = debug.h debug.c util.h util.c
+DEBUG = debug.h debug.c
+UTIL = util.h util.c
+HEADER = header.h header.c
+COMMON = $(DEBUG) $(UTIL) $(HEADER)
+READSECTION = readsection.h readsection.c
+TABLESECTION = tablesection.h tablesection.c
+SYMBOLTABLE = symboltable.h symboltable.c
+RELOCA = reloca.h reloca.c
+PROGBITS = progbits.h progbits.c
+FUSIONSYMBOLE = fusionsymbole.h fusionsymbole.c
 EXTRA_DIST = filtre.pl sample_run.sh
-SIMULATOR_INTERFACE = csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
-ARM_runner_example_SOURCES = $(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
+# SIMULATOR_INTERFACE=csapp.h csapp.c scanner.h scanner.l gdb_protocol.h gdb_protocol.c arm_simulator_interface.h arm_simulator_interface.c
+
+# ARM_runner_example_SOURCES=$(COMMON) $(SIMULATOR_INTERFACE) ARM_runner_example.c
+readelf_header_SOURCES = $(COMMON) readelf_header.c
+readelf_section_list_SOURCES = $(COMMON) $(TABLESECTION) readelf_section_list.c
+readelf_section_content_SOURCES = $(COMMON) $(READSECTION) $(TABLESECTION) readelf_section_content.c
+readelf_symbols_table_SOURCES = $(COMMON) $(SYMBOLTABLE) $(TABLESECTION) readelf_symbols_table.c
+readelf_relocation_SOURCES = $(COMMON) $(TABLESECTION) $(RELOCA) readelf_relocation.c
+etape6_SOURCES = $(COMMON) $(PROGBITS) $(TABLESECTION) etape6.c
+etape7_SOURCES = $(COMMON) $(PROGBITS) $(TABLESECTION) $(SYMBOLTABLE) $(FUSIONSYMBOLE) etape7.c
 all: all-recursive
 
 .SUFFIXES:
-.SUFFIXES: .c .l .o .obj
+.SUFFIXES: .c .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -412,9 +473,33 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-ARM_runner_example$(EXEEXT): $(ARM_runner_example_OBJECTS) $(ARM_runner_example_DEPENDENCIES) $(EXTRA_ARM_runner_example_DEPENDENCIES) 
-	@rm -f ARM_runner_example$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(ARM_runner_example_OBJECTS) $(ARM_runner_example_LDADD) $(LIBS)
+etape6$(EXEEXT): $(etape6_OBJECTS) $(etape6_DEPENDENCIES) $(EXTRA_etape6_DEPENDENCIES) 
+	@rm -f etape6$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(etape6_OBJECTS) $(etape6_LDADD) $(LIBS)
+
+etape7$(EXEEXT): $(etape7_OBJECTS) $(etape7_DEPENDENCIES) $(EXTRA_etape7_DEPENDENCIES) 
+	@rm -f etape7$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(etape7_OBJECTS) $(etape7_LDADD) $(LIBS)
+
+readelf_header$(EXEEXT): $(readelf_header_OBJECTS) $(readelf_header_DEPENDENCIES) $(EXTRA_readelf_header_DEPENDENCIES) 
+	@rm -f readelf_header$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(readelf_header_OBJECTS) $(readelf_header_LDADD) $(LIBS)
+
+readelf_relocation$(EXEEXT): $(readelf_relocation_OBJECTS) $(readelf_relocation_DEPENDENCIES) $(EXTRA_readelf_relocation_DEPENDENCIES) 
+	@rm -f readelf_relocation$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(readelf_relocation_OBJECTS) $(readelf_relocation_LDADD) $(LIBS)
+
+readelf_section_content$(EXEEXT): $(readelf_section_content_OBJECTS) $(readelf_section_content_DEPENDENCIES) $(EXTRA_readelf_section_content_DEPENDENCIES) 
+	@rm -f readelf_section_content$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(readelf_section_content_OBJECTS) $(readelf_section_content_LDADD) $(LIBS)
+
+readelf_section_list$(EXEEXT): $(readelf_section_list_OBJECTS) $(readelf_section_list_DEPENDENCIES) $(EXTRA_readelf_section_list_DEPENDENCIES) 
+	@rm -f readelf_section_list$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(readelf_section_list_OBJECTS) $(readelf_section_list_LDADD) $(LIBS)
+
+readelf_symbols_table$(EXEEXT): $(readelf_symbols_table_OBJECTS) $(readelf_symbols_table_DEPENDENCIES) $(EXTRA_readelf_symbols_table_DEPENDENCIES) 
+	@rm -f readelf_symbols_table$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(readelf_symbols_table_OBJECTS) $(readelf_symbols_table_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -422,12 +507,21 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ARM_runner_example.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/arm_simulator_interface.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/csapp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gdb_protocol.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scanner.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/etape6.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/etape7.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fusionsymbole.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/header.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/progbits.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readelf_header.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readelf_relocation.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readelf_section_content.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readelf_section_list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readelf_symbols_table.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readsection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reloca.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/symboltable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tablesection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/util.Po@am__quote@
 
 .c.o:
@@ -443,9 +537,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-.l.c:
-	$(AM_V_LEX)$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -779,7 +870,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f scanner.c
 clean: clean-recursive
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
