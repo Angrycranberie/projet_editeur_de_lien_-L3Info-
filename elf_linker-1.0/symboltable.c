@@ -44,7 +44,8 @@ symbol_table_64 read_symbols_tables_64(FILE * f, Elf64_Ehdr header, section_list
       symtable.entries = malloc(nb * sizeof(Elf64_Sym));
       
       // On recupere toutes les entrees de la table des symboles
-      for(int j=0; j < nb; j++){
+      int j;
+      for(j=0; j < nb; j++){
         // On se place dans la table des symboles
         fseek(f, seclist.sec_list[i].sh_offset + j * seclist.sec_list[i].sh_entsize, SEEK_SET);
         
