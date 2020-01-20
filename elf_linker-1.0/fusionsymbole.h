@@ -10,7 +10,5 @@
  Renvoie la table des symboles fusionnée et la table des chaines associée (dans une structure symbol_table64). */
 symbol_table_64 fusion_symbol_tables_64(Table_sections sections, symbol_table_64 symtab1, symbol_table_64 symtab2);
 
-// Fonction analogue pour la version 32 bits.
-symbol_table_32 fusion_symbol_tables_32(Table_sections sections, symbol_table_32 symtab1, symbol_table_32 symtab2);
 
 #endif
